@@ -1,0 +1,5 @@
+rootProject.name = 'ReactSmartsdkClient'
+include ':react-smartsdk'
+project(':react-smartsdk').projectDir = new File(rootProject.projectDir, '../node_modules/react-smartsdk/android')
+
+include ':app'
