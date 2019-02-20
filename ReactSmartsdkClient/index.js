@@ -17,15 +17,15 @@ import {
 class Resultat extends Component {
   constructor(props) {
     super(props);
-    this.state = {last_name: "unknown", first_name: "unknown", recto_uri : ""};
+    this.state = {welcome_label: "Hello !", recto_uri : ""};
   }
 
   response_server(results){
     this.setState({
-      last_name: results.mapDocument.IDENTITY_DOCUMENT.fields.LAST_NAME,
-      first_name: results.mapDocument.IDENTITY_DOCUMENT.fields.FIRST_NAMES,
+      welcome_label: "Hello, " + results.mapDocument.IDENTITY_DOCUMENT.fields.FIRST_NAMES + " " + results.mapDocument.IDENTITY_DOCUMENT.fields.LAST_NAMES + " !",
       recto_uri: results["mapImageSource"]["IMAGES_RECTO"]["imageUri"]
     });
+    console.log("response_server() -> " + JSON.stringify(results.mapDocument.IDENTITY_DOCUMENT.fields));
   }
 
   async requestPermissions(){
@@ -73,7 +73,7 @@ class Resultat extends Component {
     }
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome} >Hello, {this.state.last_name} {this.state.first_name} !</Text>
+        <Text style={styles.welcome}>{this.state.welcome_label}</Text>
         <Button onPress={() => { this.capture(); }} title="Capture"/>
       </View>
     );
