@@ -17,15 +17,15 @@ import {
 class Resultat extends Component {
   constructor(props) {
     super(props);
-    this.state = {welcome_label: "Hello !", recto_uri : ""};
+    this.state = {welcome_label: "Hello !", img_face_uri : ""};
   }
 
   response_server(results){
+    console.log("response_server() -> " + JSON.stringify(results));
     this.setState({
       welcome_label: "Hello, " + results.mapDocument.IDENTITY_DOCUMENT.fields.FIRST_NAMES + " " + results.mapDocument.IDENTITY_DOCUMENT.fields.LAST_NAMES + " !",
-      recto_uri: results["mapImageSource"]["IMAGES_RECTO"]["imageUri"]
+      img_face_uri: (typeof(results.mapImageFace) !== 'undefined' && typeof(results.mapImageFace.FACE_CROPPED) !== 'undefined') ? results.mapImageFace.FACE_CROPPED.imageUri : ""
     });
-    console.log("response_server() -> " + JSON.stringify(results.mapDocument.IDENTITY_DOCUMENT.fields));
   }
 
   async requestPermissions(){
@@ -46,6 +46,7 @@ class Resultat extends Component {
 
   async capture(){
     try{
+      console.log("Dictionnary.params = " + JSON.stringify(Dictionnary.params));
       var{
         axtSdkResult
       } = await SmartsdkModule.capture(Dictionnary.params);
@@ -73,6 +74,10 @@ class Resultat extends Component {
     }
     return (
       <View style={styles.container}>
+        <Image
+          style={styles.facePic}
+          source={{uri: (!this.state.img_face_uri || this.state.img_face_uri.length === 0) ? "https://www.ariadnext.com/wp-content/uploads/2019/01/logo-ariadnext-rvb-baseline.png" : this.state.img_face_uri}}
+          resizeMode="contain" />
         <Text style={styles.welcome}>{this.state.welcome_label}</Text>
         <Button onPress={() => { this.capture(); }} title="Capture"/>
       </View>
@@ -94,6 +99,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
+  },
+  facePic: {
+    width: 150,
+    height: 150,
+    margin: 10,
   },
   welcome: {
     fontSize: 20,
