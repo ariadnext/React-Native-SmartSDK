@@ -172,8 +172,9 @@ $(PROJECT_DIR)/../node_modules/react-smartsdk/ios/Frameworks
                           'DATA_EXTRACTION_REQUIREMENT': 'MRZ_FOUND',
                           'EXTRA_PARAMETERS': {'AXT_ADJUST_CROP': 'true'}};
     ```
-  - For **iOS**:
-  ```javascript
+    
+  - For **iOS** :
+    ```javascript
     export var params = {'EXTRACT_DATA': 'YES',
                           'USE_HD': 'NO',
                           'DISPLAY_CAPTURE': 'YES',
@@ -183,8 +184,10 @@ $(PROJECT_DIR)/../node_modules/react-smartsdk/ios/Frameworks
                           'DATA_EXTRACTION_REQUIREMENT': 'MRZ_FOUND',
                           'EXTRA_PARAMETERS': {'AXT_ADJUST_CROP': 'YES'}};
     ```
-6. ⚠️ &nbsp;**ANDROID ONLY**&nbsp;: Before initializing the sdk, you have to ask for permissions (`CAMERA` and `READ_PHONE_STATE`).To do so, you can use the following method :
-    ```javascript
+    
+6. ⚠️  &nbsp; **ANDROID ONLY** Before initializing the sdk, you have to ask for permissions (`CAMERA` and `READ_PHONE_STATE`).
+  To do so, you can use the following method :
+  ```javascript
     async requestPermissions(){
       try{
         const granted = await PermissionsAndroid.requestMultiple(
@@ -200,4 +203,4 @@ $(PROJECT_DIR)/../node_modules/react-smartsdk/ios/Frameworks
         console.warn(err);
       }
     }
-    ```
+  ```
