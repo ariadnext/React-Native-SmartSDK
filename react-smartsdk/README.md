@@ -74,8 +74,8 @@ Add the native `SmartsdkKit.framework` in the **react-smartsdk module (not in yo
 #### 📱 &nbsp; Application's configuration (your project)
 
 1. In XCode, in the project navigator, right click `Libraries` ➜ `Add Files to [your project's name]`
-2. Go to `node_modules` ➜ `react-smartsdk` and add `RNReactSmartsdk.xcodeproj`
-3. In XCode, in the project navigator, select your **project**. Add `libRNReactSmartsdk.a` to your project's `Build Phases` ➜ `Link Binary With Libraries`
+2. Go to `node_modules` ➜ `react-smartsdk` and add `Smartsdk.xcodeproj`
+3. In XCode, in the project navigator, select your **project**. Add `libSmartsdk.a` to your project's `Build Phases` ➜ `Link Binary With Libraries`
 4. Still in XCode, select your **app target** (not the project !). Add the framework search path corresponding to `SmartsdkKit.framework` in `Build Settings` ➜ `Search Paths` ➜ `Frameworks Search Paths`:
 ```
 $(PROJECT_DIR)/../node_modules/react-smartsdk/ios/Frameworks
