@@ -1,0 +1,20 @@
+{
+  "name": "ReactIdcheckioClient",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "start": "react-native start"
+  },
+  "dependencies": {
+    "react": "16.9.0",
+    "react-native": "0.61.2"
+  },
+  "devDependencies": {
+    "react-idcheckio": "file:.yalc/react-idcheckio",
+    "react-test-renderer": "16.9.0"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
