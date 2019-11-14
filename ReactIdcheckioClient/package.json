@@ -1,20 +1,18 @@
 {
-  "name": "ReactSmartsdkClient",
+  "name": "ReactIdcheckioClient",
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
+    "android": "react-native run-android",
+    "start": "react-native start"
   },
   "dependencies": {
-    "react": "16.6.1",
-    "react-native": "0.57.5"
+    "react": "16.9.0",
+    "react-native": "0.61.2"
   },
   "devDependencies": {
-    "babel-jest": "23.6.0",
-    "jest": "23.6.0",
-    "metro-react-native-babel-preset": "0.49.2",
-    "react-test-renderer": "16.6.1"
+    "react-idcheckio": "file:../react-idcheckio",
+    "react-test-renderer": "16.9.0"
   },
   "jest": {
     "preset": "react-native"

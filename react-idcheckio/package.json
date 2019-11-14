@@ -1,7 +1,8 @@
 {
   "name": "react-idcheckio",
+  "title": "React Idcheckio",
   "version": "1.0.0",
-  "description": "## Getting started",
+  "description": "TODO",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,7 +12,11 @@
   ],
   "author": "AriadNEXT",
   "license": "ISC",
+  "readmeFilename": "README.md",
+  "private": true,
   "peerDependencies": {
-    "react-native": "^0.41.2"
-  }
+    "react": "16.9.0",
+    "react-native": ">=0.60.0"
+  },
+  "dependencies": {}
 }

@@ -1,55 +1,65 @@
-
 buildscript {
+    ext.safeExtGet = {prop, fallback ->
+        rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+    }
     repositories {
         google()
         jcenter()
-        mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
+        // Matches recent template from React Native (0.60)
+        // https://github.com/facebook/react-native/blob/0.60-stable/template/android/build.gradle#L16
+        classpath("com.android.tools.build:gradle:${safeExtGet('gradlePluginVersion', '3.4.1')}")
     }
 }
 
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion "28.0.3"
+    compileSdkVersion safeExtGet('compileSdkVersion', 28)
+    buildToolsVersion safeExtGet('buildToolsVersion', "28.0.3")
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 28
+        minSdkVersion safeExtGet('minSdkVersion', 19)
+        targetSdkVersion safeExtGet('targetSdkVersion', 28)
         versionCode 1
+        multiDexEnabled true
         versionName "1.0"
-    }
-    lintOptions {
-        abortOnError false
     }
 }
 
 repositories {
-    google()
-    jcenter()
-    mavenCentral()
-    flatDir {
-        dirs 'libs'
-    }
+    mavenLocal()
     maven {
         // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-        url "$rootDir/../node_modules/react-native/android"
+        url("$rootDir/../node_modules/react-native/android")
     }
+    maven {
+        // Android JSC is installed from npm
+        url("$rootDir/../node_modules/jsc-android/dist")
+    }
+    google()
+    jcenter()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-    implementation 'com.facebook.react:react-native:+'
-    implementation (name: 'idcheckio', ext: 'aar')
-    implementation 'com.android.support:multidex:1.0.3'
-    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
-    implementation 'com.android.support:design:28.0.0'
-    implementation 'com.google.android.gms:play-services-vision:17.0.2'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.2'
-    implementation 'au.com.datasymphony:EasyFlow:1.3.1'
-    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation "com.facebook.react:react-native:${safeExtGet('reactnativeVersion', '+')}"
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.50"
+    implementation "org.springframework.android:spring-android-rest-template:2.0.0.M1"
+    implementation "com.google.protobuf:protobuf-java:3.4.0"
+    implementation "com.google.android.material:material:1.1.0-beta01"
+    implementation "org.java-websocket:Java-WebSocket:1.3.9"
+    implementation "androidx.multidex:multidex:2.0.1"
+    implementation "com.squareup.okhttp3:okhttp:3.12.1"
+    implementation "joda-time:joda-time:2.9.9"
+    implementation "com.squareup.retrofit2:converter-scalars:2.2.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.2.0"
+    implementation "androidx.constraintlayout:constraintlayout:2.0.0-beta1"
+    implementation('com.ariadnext.android.idcheckio:sdk:5.3.0-demo@aar') {
+        transitive = true
+    }
+    implementation 'androidx.multidex:multidex:2.0.1'
 }
-  

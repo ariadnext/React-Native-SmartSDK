@@ -1,4 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.reactlibrary">
+          package="com.ariadnext.idcheckio">
+    <application>
+        <activity android:name="com.ariadnext.idcheckio.IdcheckioActivity" android:screenOrientation="portrait" />
+    </application>
 </manifest>
-  

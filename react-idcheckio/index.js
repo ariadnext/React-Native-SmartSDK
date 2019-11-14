@@ -1,6 +1,5 @@
-
 import { NativeModules } from 'react-native';
 
-const { Smartsdk } = NativeModules;
+const { Idcheckio } = NativeModules;
 
-export default Smartsdk;
+export default Idcheckio;
