@@ -26,15 +26,15 @@ class Resultat extends Component {
         this.state = {
             last_name: "unknown",
             first_name: "unknown",
-            recto_uri: ""
+            recto_uri: "https://ci4.googleusercontent.com/proxy/XZHTJJGv_mPA3me1ZXmGiVZFvgZz8p0NdOoR6g-6skj4iJq2loHKQUTZoxxSIZiyVW2YB43AB0-3Dztl18bhxayjUjSeosPFkEHNFf6xcvRLdCg0rp4UUVU_MNSZOmXAI8k9cUuLDQ=s0-d-e1-ft#https://fr.ariadnext.com/wp-content/uploads//2019/01/logo-ariadnext-rvb-baseline.png"
         };
     }
 
     response_server(results) {
         this.setState({
-            last_name: results.documents.fields.lastNames.value,
-            first_name: "",
-            recto_uri: ""
+            last_name: results.document.fields.lastNames.value,
+            first_name: results.document.fields.firstNames.value,
+            recto_uri: results.images[0].cropped
         });
     }
 
@@ -52,60 +52,70 @@ class Resultat extends Component {
         }
     }
 
-    async start() {
-        try {
-            var {
-                idcheckioResult
-            } = await IdcheckioModule.start(Dictionnary.paramsId);
-            console.log(idcheckioResult);
-            results = JSON.parse(idcheckioResult);
+    start() {
+        IdcheckioModule.start(Dictionnary.paramsId)
+        .then(data => {
+            console.log(data);
+            results = JSON.parse(data);
             console.log(results);
             this.response_server(results);
-        } catch (e) {
-            console.log(e);
-        }
+        },
+        cause => {
+            console.log(cause);
+        })
+        .catch(err => {
+            console.log(err);
+        });
     }
 
-    async startOnline() {
-        try {
-            var {
-                idcheckioResult
-            } = await IdcheckioModule.startOnline(Dictionnary.paramsIdOnline, "license", {}, false);
-            results = JSON.parse(idcheckioResult);
+    startOnline() {
+        IdcheckioModule.startOnline(Dictionnary.paramsIdOnline, "license", {}, false)
+        .then(data => {
+            results = JSON.parse(data);
             this.response_server(results);
-        } catch (e) {
-            console.log(e);
-        }
+        },
+        cause => {
+            console.log(cause);
+        })
+        .catch(err => {
+            console.log(err);
+        });
     }
 
-    async startLiveness() {
+    startLiveness() {
         var cisContext = {
             'referenceDocUid': results.documentUid,
             'referenceTaskUid': results.taskUid,
             'folderUid': results.folderUid
         };
-        try {
-            var {
-                idcheckioResult
-            } = await IdcheckioModule.startOnline(Dictionnary.paramsLiveness, "license", cisContext, false);
-            results = JSON.parse(idcheckioResult);
+        IdcheckioModule.startOnline(Dictionnary.paramsLiveness, "license", cisContext, false)
+        .then(data => {
+            results = JSON.parse(data);
             this.response_server(results);
-        } catch (e) {
-            console.log(e);
-        }
+        },
+        cause => {
+            console.log(cause);
+        })
+        .catch(err => {
+            console.log(err);
+        });
     }
 
-    async activate() {
-        try {
-            await IdcheckioModule.activate("license", true, false);
+    activate() {
+        IdcheckioModule.activate("license", true, false)
+        .then(data => {
             console.log("Activated");
-        } catch (error) {
-            console.log(error);
-        }
+        },
+        cause => {
+            console.log(cause);
+        })
+        .catch(err => {
+            console.log(err);
+        });
     }
 
-    async preload() {
-        await IdcheckioModule.preload(true);
+    preload() {
+        IdcheckioModule.preload(true);
     }
 
     render() {
@@ -122,7 +132,8 @@ class Resultat extends Component {
                 this.state.last_name
             } {
                 this.state.first_name
-            }! </Text>
+            } ! </Text>
+            <Image style={{width: 300, height: 200,resizeMode: 'contain', borderWidth: 1, borderColor: 'black'}} source={{uri: this.state.recto_uri}} />
             <Button onPress = {
                 () => {
                     this.activate();

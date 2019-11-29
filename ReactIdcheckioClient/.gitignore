@@ -57,3 +57,8 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
+# Yalc local folder
+.yalc
+yalc.lock
+yarn.lock

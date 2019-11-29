@@ -42,7 +42,49 @@ Don\'t forget you may need to run yarn after adding packages with yalc to instal
 ```
 
 ## Platform specific configuration
- 
+
+#### iOS
+
+1. In your project folder, go to your `ios` directory and open the `Podfile` :
+ - Change the minimum version to at least '10.0'
+ ```ruby
+platform :ios, '10.0'
+ ```
+ - Add the following lines before the target :
+```ruby
+source 'https://github.com/CocoaPods/Specs.git'
+source 'https://git-externe.rennes.ariadnext.com/idcheckio/axt-podspecs.git'
+```
+ - Add `use_frameworks!` before the `use_native_modules!` :
+ -
+```ruby
+target 'YOUR_APP_TARGET' do
+    use_frameworks!
+    use_native_modules!
+    // Your pods...
+end
+```
+
+2. ⚠️ Make sure **Git LFS** in intialized in your iOS repository ⚠️
+```shell
+  $ cd YOUR_PROJECT_FOLDER/ios
+  $ git lfs install
+  Git LFS initialized.
+```
+
+> Check the official documentation for more informations.
+
+3. Retrieve the sdk using `pod install` in your `ios` project folder
+```shell
+  $ pod install
+```
+
+3. Add the licence file to your ios project, and link it to your app bundle.
+
+4. In your project, open the `*.plist` file and the two following entries :
+- `Privacy - Camera Usage Description` : "Camera is being used to scan documents"
+- `"`Privacy - Microphone Usage Description` : "Microphone is being used to record users speech during liveness session"
+
 #### Android
 
 1. Insert the following lines inside the dependencies block in `android/app/build.gradle`:
@@ -109,20 +151,24 @@ async requestPermissions() {
 
 4. Before doing any call to the sdk, you can use the `preload()` method. It will accelerate the future call the to the capture process. You won't receive any callback when calling this method.
 ```javascript
-async preload() {
-    await IdcheckioModule.preload(true);
+preload() {
+    IdcheckioModule.preload(true);
 }
 ```
 
 5. Before capturing any document, you need to activate the licence. To do so, you have to use the `activate()` method.
 ```javascript
-async activate() {
-    try {
-        await IdcheckioModule.activate("license", true, false);
+activate() {
+    IdcheckioModule.activate("YOUR_LICENCE_FILENAME", true, false)
+    .then(data => {
         console.log("Activated");
-    } catch (error) {
-        console.log(error);
-    }
+    },
+    cause => {
+        console.log(cause);
+    })
+    .catch(err => {
+        console.log(err);
+    });
 }
 ```
 
@@ -139,40 +185,45 @@ async activate() {
     }
   };
 
-  async start() {
-      try {
-          var {
-              idcheckioResult
-          } = await IdcheckioModule.start(Dictionnary.paramsId);
-          results = JSON.parse(idcheckioResult);
+  start() {
+      IdcheckioModule.start(Dictionnary.paramsId)
+      .then(data => {
+          results = JSON.parse(data);
           this.response_server(results);
-      } catch (e) {
-          console.log(e);
-      }
+      },
+      cause => {
+          console.log(cause);
+      })
+      .catch(err => {
+          console.log(err);
+      });
   }
 ```
 
 7. To start an online capture of a document, you have the method the `startOnline()` method. You will receive the result in a string that can be parse into a json object.
 ```javascript
-  export var paramsLiveness = {'DocumentType': 'LIVENESS',
+  export var paramsLiveness = {
+    'DocumentType': 'LIVENESS',
     'Orientation': 'PORTRAIT'
   };
 
-  async startOnline() {
+  startOnline() {
       var cisContext = {
           'referenceDocUid': results.documentUid,
           'referenceTaskUid': results.taskUid,
           'folderUid': results.folderUid
       };
-      try {
-          var {
-              idcheckioResult
-          } = await IdcheckioModule.startOnline(Dictionnary.paramsLiveness, "license", cisContext, false);
-          results = JSON.parse(idcheckioResult);
+      IdcheckioModule.startOnline(Dictionnary.paramsLiveness, "YOUR_LICENCE_FILENAME", cisContext, false)
+      .then(data => {
+          results = JSON.parse(data);
           this.response_server(results);
-      } catch (e) {
-          console.log(e);
-      }
+      },
+      cause => {
+          console.log(cause);
+      })
+      .catch(err => {
+          console.log(err);
+      });
   }
 ```
 
