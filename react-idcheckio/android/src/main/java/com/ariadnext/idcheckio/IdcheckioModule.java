@@ -53,9 +53,7 @@ public class IdcheckioModule extends ReactContextBaseJavaModule implements Idche
                 if (requestCode == START_REQUEST) {
                     if (resultCode == Activity.RESULT_OK) {
                         String result = intent.getExtras().getString("IDCHECKIO_RESULT", "{}");
-                        WritableMap map = Arguments.createMap();
-                        map.putString("idcheckioResult", result);
-                        mPromise.resolve(map);
+                        mPromise.resolve(result);
                     } else if(resultCode == Activity.RESULT_CANCELED){
                         String resultType = "";
                         String resultErrorCode = "";

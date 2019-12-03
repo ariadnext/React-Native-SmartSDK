@@ -71,6 +71,7 @@ class Resultat extends Component {
     startOnline() {
         IdcheckioModule.startOnline(Dictionnary.paramsIdOnline, "license", {}, false)
         .then(data => {
+            console.log(data);
             results = JSON.parse(data);
             this.response_server(results);
         },
