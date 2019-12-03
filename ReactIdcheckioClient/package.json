@@ -8,10 +8,10 @@
   },
   "dependencies": {
     "react": "16.9.0",
+    "react-idcheckio": "file:.yalc/react-idcheckio",
     "react-native": "0.61.2"
   },
   "devDependencies": {
-    "react-idcheckio": "file:.yalc/react-idcheckio",
     "react-test-renderer": "16.9.0"
   },
   "jest": {

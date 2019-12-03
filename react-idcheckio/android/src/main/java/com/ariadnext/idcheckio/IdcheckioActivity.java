@@ -20,6 +20,7 @@ import com.ariadnext.idcheckio.sdk.bean.Extraction;
 import com.ariadnext.idcheckio.sdk.bean.FaceDetection;
 import com.ariadnext.idcheckio.sdk.bean.FeedbackLevel;
 import com.ariadnext.idcheckio.sdk.bean.FileSize;
+import com.ariadnext.idcheckio.sdk.bean.Language;
 import com.ariadnext.idcheckio.sdk.bean.Forceable;
 import com.ariadnext.idcheckio.sdk.bean.Orientation;
 import com.ariadnext.idcheckio.sdk.component.IdcheckioView;
@@ -100,7 +101,7 @@ public class IdcheckioActivity extends FragmentActivity implements IdcheckioInte
                             Object extraValue = extraEntries.getValue();
                             switch (extraKey) {
                                 case "Language":
-                                    idcheckioView.language(extraValue.toString());
+                                    idcheckioView.language(Language.valueOf(extraValue.toString()));
                                     break;
                                 case "ManualButtonTimer":
                                     idcheckioView.manualButtonTimer(Integer.parseInt(extraValue.toString()));

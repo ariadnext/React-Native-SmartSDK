@@ -90,8 +90,8 @@ class Resultat extends Component {
         };
         IdcheckioModule.startOnline(Dictionnary.paramsLiveness, "license", cisContext, false)
         .then(data => {
+            console.log(data);
             results = JSON.parse(data);
-            this.response_server(results);
         },
         cause => {
             console.log(cause);
