@@ -11,5 +11,5 @@ Pod::Spec.new do |s|
   s.swift_version = '5.1'
 
   s.dependency 'React'
-  s.dependency 'IDCheckIOSDK', '5.3.0'
+  s.dependency 'IDCheckIOSDK', '5.3.1'
 end
