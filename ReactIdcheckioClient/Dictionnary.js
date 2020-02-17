@@ -21,5 +21,9 @@ export var paramsIdOnline = {'DocumentType': 'ID',
 };
 
 export var paramsLiveness = {'DocumentType': 'LIVENESS',
-  'Orientation': 'PORTRAIT'
+  'Orientation': 'PORTRAIT',
+  'ExtraParams': {
+    'ActivationUrl': 'https://api.ariadnext.com/activation/rest/v0/activate',
+    'FalconWSS': 'wss://falcon-demo.ariadnext.com/wss-falcon'
+  }
 };

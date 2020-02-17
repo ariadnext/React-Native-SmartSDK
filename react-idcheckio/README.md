@@ -3,7 +3,7 @@
 ## Prerequisites
 
 Before started, please make sure you've installed :
-- **npm** - `brew install node`, `brew install watchman`
+- **npm** - `brew install node`
 - **react-native** - `npm install -g react-native-cli`, `npm install -g react`, `npm install -g react-native`
 - **yalc** - `npm install -g yalc`
 
@@ -45,45 +45,25 @@ Don\'t forget you may need to run yarn after adding packages with yalc to instal
 
 #### iOS
 
-1. In your project folder, go to your `ios` directory and open the `Podfile` :
+- ⚠️⚠️  &nbsp; The plugin used the legacy iOS build system, so you have to use the latest version of XCode to use it. We'll try to keep the plugin updated with the latest XCode version (Currently 11.3.1) &nbsp;⚠️⚠️
+
+1. In your project folder, go to your ios directory and open the Podfile :
  - Change the minimum version to at least '10.0'
- ```ruby
-platform :ios, '10.0'
- ```
  - Add the following lines before the target :
-```ruby
+```
 source 'https://github.com/CocoaPods/Specs.git'
 source 'https://git-externe.rennes.ariadnext.com/idcheckio/axt-podspecs.git'
 ```
- - Add `use_frameworks!` before the `use_native_modules!` :
- -
-```ruby
-target 'YOUR_APP_TARGET' do
-    use_frameworks!
-    use_native_modules!
-    // Your pods...
-end
-```
+ - Add `use_frameworks!` before the `use_native_modules!`
 
-2. ⚠️ Make sure **Git LFS** in intialized in your iOS repository ⚠️
-```shell
-  $ cd YOUR_PROJECT_FOLDER/ios
-  $ git lfs install
-  Git LFS initialized.
-```
+2. Retrieve the sdk using `pod install`
+- ⚠️⚠️  &nbsp; You will need to have git lfs installed and configured before using this command. Check the official documentation for more informations. &nbsp;⚠️⚠️
 
-> Check the official documentation for more informations.
+3. Add the licence file to your ios project.
 
-3. Retrieve the sdk using `pod install` in your `ios` project folder
-```shell
-  $ pod install
-```
-
-3. Add the licence file to your ios project, and link it to your app bundle.
-
-4. In your project, open the `*.plist` file and the two following entries :
-- `Privacy - Camera Usage Description` : "Camera is being used to scan documents"
-- `"`Privacy - Microphone Usage Description` : "Microphone is being used to record users speech during liveness session"
+4. In your project, open the *.plist file and the two following entries :
+- "Privacy - Camera Usage Description" : "Camera is being used to scan documents"
+- "Privacy - Microphone Usage Description" : "Microphone is being used to record users speech during liveness session"
 
 #### Android
 
@@ -159,7 +139,7 @@ preload() {
 5. Before capturing any document, you need to activate the licence. To do so, you have to use the `activate()` method.
 ```javascript
 activate() {
-    IdcheckioModule.activate("YOUR_LICENCE_FILENAME", true, false)
+    IdcheckioModule.activate("license", true, false)
     .then(data => {
         console.log("Activated");
     },
@@ -213,7 +193,7 @@ activate() {
           'referenceTaskUid': results.taskUid,
           'folderUid': results.folderUid
       };
-      IdcheckioModule.startOnline(Dictionnary.paramsLiveness, "YOUR_LICENCE_FILENAME", cisContext, false)
+      IdcheckioModule.startOnline(Dictionnary.paramsLiveness, "license", cisContext, false)
       .then(data => {
           results = JSON.parse(data);
           this.response_server(results);

@@ -6,17 +6,13 @@ import android.content.Intent;
 import com.ariadnext.idcheckio.sdk.component.Idcheckio;
 import com.ariadnext.idcheckio.sdk.interfaces.ErrorMsg;
 import com.ariadnext.idcheckio.sdk.interfaces.IdcheckioCallback;
-import com.ariadnext.idcheckio.sdk.interfaces.result.IdcheckioResult;
 import com.facebook.react.bridge.ActivityEventListener;
-import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.BaseActivityEventListener;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.bridge.WritableMap;
 
 public class IdcheckioModule extends ReactContextBaseJavaModule implements IdcheckioCallback {
     /**

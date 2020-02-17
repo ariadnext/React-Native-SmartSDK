@@ -160,6 +160,10 @@ RCT_EXPORT_METHOD(startOnline:(NSDictionary*)params
                     Idcheckio.shared.extraParameters.confirmAbort = [[extraParams objectForKey:extraKey] boolValue];
                 } else if([extraKey isEqualToString:AdjustCrop]){
                     Idcheckio.shared.extraParameters.adjustCrop = [[extraParams objectForKey:extraKey] boolValue];
+                } else if([extraKey isEqualToString:ActivationUrl]){
+                    Idcheckio.shared.extraParameters.activationURL = [extraParams objectForKey:extraKey];
+                } else if([extraKey isEqualToString:FalconWSS]){
+                    Idcheckio.shared.extraParameters.falconWSS = [extraParams objectForKey:extraKey];
                 }
             }
         }
