@@ -17,13 +17,15 @@ export var paramsIdOnline = {'DocumentType': 'ID',
   'Side1Extraction': {
     'DataRequirement': 'DECODED',
     'FaceDetection': 'ENABLED'
+  },
+  'ExtraParams': {
+    'SdkEnvironment': 'DEMO'
   }
 };
 
 export var paramsLiveness = {'DocumentType': 'LIVENESS',
   'Orientation': 'PORTRAIT',
   'ExtraParams': {
-    'ActivationUrl': 'https://api.ariadnext.com/activation/rest/v0/activate',
-    'FalconWSS': 'wss://falcon-demo.ariadnext.com/wss-falcon'
+    'SdkEnvironment': 'DEMO'
   }
 };

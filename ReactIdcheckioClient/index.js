@@ -5,6 +5,7 @@ import React, {
     Component
 } from 'react';
 import IdcheckioModule from './IdcheckioModule';
+import ImagePicker from 'react-native-image-picker';
 import * as Dictionnary from './Dictionnary';
 import {
     AppRegistry,
@@ -41,10 +42,9 @@ class Resultat extends Component {
     async requestPermissions() {
         try {
             const granted = await PermissionsAndroid.requestMultiple(
-                [PermissionsAndroid.PERMISSIONS.CAMERA, PermissionsAndroid.PERMISSIONS.RECORD_AUDIO]
+                [PermissionsAndroid.PERMISSIONS.CAMERA]
             )
-            if (granted[PermissionsAndroid.PERMISSIONS.CAMERA] === PermissionsAndroid.RESULTS.GRANTED &&
-                granted[PermissionsAndroid.PERMISSIONS.RECORD_AUDIO] === PermissionsAndroid.RESULTS.GRANTED) {} else {
+            if (granted[PermissionsAndroid.PERMISSIONS.CAMERA] === PermissionsAndroid.RESULTS.GRANTED) {} else {
                 console.log("Permission denied")
             }
         } catch (err) {
@@ -69,7 +69,7 @@ class Resultat extends Component {
     }
 
     startOnline() {
-        IdcheckioModule.startOnline(Dictionnary.paramsIdOnline, "license", {}, false)
+        IdcheckioModule.startOnline(Dictionnary.paramsIdOnline, {})
         .then(data => {
             console.log(data);
             results = JSON.parse(data);
@@ -89,7 +89,7 @@ class Resultat extends Component {
             'referenceTaskUid': results.taskUid,
             'folderUid': results.folderUid
         };
-        IdcheckioModule.startOnline(Dictionnary.paramsLiveness, "license", cisContext, false)
+        IdcheckioModule.startOnline(Dictionnary.paramsLiveness, cisContext)
         .then(data => {
             console.log(data);
             results = JSON.parse(data);
@@ -103,7 +103,7 @@ class Resultat extends Component {
     }
 
     activate() {
-        IdcheckioModule.activate("license", true, false)
+        IdcheckioModule.activate("license", true, false, true, "DEMO")
         .then(data => {
             console.log("Activated");
         },
@@ -117,6 +117,43 @@ class Resultat extends Component {
 
     preload() {
         IdcheckioModule.preload(true);
+    }
+
+    analyze(){
+        const options = {
+            title: 'Select Document',
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+        };
+
+        ImagePicker.launchImageLibrary(options, (response) => {
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
+            } else {
+                const source = { uri: response.uri };
+                // You can also display the image using data:
+                // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+                IdcheckioModule.analyze(Dictionnary.paramsIdOnline, source.uri, null, true, {})
+                .then(data => {
+                    console.log(data);
+                    results = JSON.parse(data);
+                    console.log(results);
+                    this.response_server(results);
+                },
+                cause => {
+                    console.log(cause);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            }
+        });
     }
 
     render() {
@@ -159,6 +196,12 @@ class Resultat extends Component {
                 }
             }
             title = "StartLiveness" />
+            <Button onPress = {
+                () => {
+                    this.analyze();
+                }
+            }
+            title = "Analyze" />
             </View>
         );
     }

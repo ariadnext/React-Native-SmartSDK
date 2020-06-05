@@ -16,9 +16,14 @@ RCT_EXPORT_METHOD(preload:(BOOL)extractData){
 RCT_EXPORT_METHOD(activate:(NSString*)licenceFileName
                   extractData:(BOOL)extractData
                   disableImei:(BOOL)disableImei
+                  disableAudioForLiveness:(BOOL)disableAudioForLiveness
+                  sdkEnvironment:(NSString*)sdkEnvironment
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject){
-    [Idcheckio.shared activateWithLicenseFilename:licenceFileName extractData:extractData onComplete:^(NSException* error){
+    [Idcheckio.shared activateWithLicenseFilename:licenceFileName extractData:extractData
+                          disableAudioForLiveness:disableAudioForLiveness
+                                   sdkEnvironment:sdkEnvironment
+                                       onComplete:^(NSException* error){
         if(error == nil){
             resolve(@"");
         } else {
@@ -66,9 +71,7 @@ RCT_EXPORT_METHOD(start:(NSDictionary*)params
 }
 
 RCT_EXPORT_METHOD(startOnline:(NSDictionary*)params
-                  licenceFileName:(NSString *)licenceFileName
                   cis:(NSDictionary*)cis
-                  disableImei:(BOOL)disableImei
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject){
     captureResolver = resolve;
@@ -97,13 +100,34 @@ RCT_EXPORT_METHOD(startOnline:(NSDictionary*)params
         [[cameraView.bottomAnchor constraintEqualToAnchor:sdkViewController.view.bottomAnchor] setActive:true];
 
         [[[UIApplication sharedApplication] keyWindow].rootViewController presentViewController:sdkViewController animated:true completion:^{
-            [Idcheckio.shared startOnlineWith:cameraView licenseFilename:licenceFileName cisContext:cisContext completion:^(NSError *error) {
+            [Idcheckio.shared startOnlineWith:cameraView cisContext:cisContext completion:^(NSError *error) {
                 if(error != nil){
                     reject(@"0", error.localizedDescription, nil);
                 }
             }];
         }];
     });
+}
+
+RCT_EXPORT_METHOD(analyze:(NSDictionary*)params
+                  side1Image:(NSString*)side1Image
+                  side2Image:(NSString*)side2Image
+                  online:(BOOL)online
+                  context:(NSDictionary*)context
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject){
+    captureResolver = resolve;
+    captureRejecter = reject;
+    Idcheckio.shared.delegate = self;
+    SDKParams* sdkParams = [self getParamsFromDictionnary:params];
+    CISContext* cisContext = [self getCisContextFromJson:context];
+    NSURL *url1 = [NSURL URLWithString:[side1Image stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+    NSURL *url2 = [NSURL URLWithString:[side2Image stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+    UIImage *side1 = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:url1]];
+    UIImage *side2 = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:url2]];
+    
+    [Idcheckio.shared analyzeWithParams: sdkParams side1Image:side1 side2Image:side2 online:online context:cisContext];
+
 }
 
 - (CISContext*) getCisContextFromJson:(NSDictionary*)cis{
@@ -160,10 +184,8 @@ RCT_EXPORT_METHOD(startOnline:(NSDictionary*)params
                     Idcheckio.shared.extraParameters.confirmAbort = [[extraParams objectForKey:extraKey] boolValue];
                 } else if([extraKey isEqualToString:AdjustCrop]){
                     Idcheckio.shared.extraParameters.adjustCrop = [[extraParams objectForKey:extraKey] boolValue];
-                } else if([extraKey isEqualToString:ActivationUrl]){
-                    Idcheckio.shared.extraParameters.activationURL = [extraParams objectForKey:extraKey];
-                } else if([extraKey isEqualToString:FalconWSS]){
-                    Idcheckio.shared.extraParameters.falconWSS = [extraParams objectForKey:extraKey];
+                } else if([extraKey isEqualToString:SdkEnvironment]){
+                    Idcheckio.shared.extraParameters.sdkEnvironment = [extraParams objectForKey:extraKey];
                 }
             }
         }

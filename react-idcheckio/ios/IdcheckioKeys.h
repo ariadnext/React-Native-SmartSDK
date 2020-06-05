@@ -27,8 +27,7 @@
 #define Token @"Token"
 #define AdjustCrop @"AdjustCrop"
 #define ConfirmAbort @"ConfirmAbort"
-#define ActivationUrl @"ActivationUrl"
-#define FalconWSS @"FalconWSS"
+#define SdkEnvironment @"SdkEnvironment"
 
 /* Cis context key */
 #define referenceDocUid @"referenceDocUid"

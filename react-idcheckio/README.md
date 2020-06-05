@@ -19,7 +19,7 @@ $ cd PATH_TO_MODULE_FOLDER/react-idcheckio
 - Publish the react-idcheckio module locally:
 ```shell
   $ yalc publish
-  react-idcheckio@1.0.0-dbcb9ede published in store.
+  react-idcheckio@5.4.2-dbcb9ede published in store.
 ```
 
 #### 2) Add react-idcheckio to your project
@@ -61,7 +61,7 @@ source 'https://git-externe.rennes.ariadnext.com/idcheckio/axt-podspecs.git'
 
 3. Add the licence file to your ios project.
 
-4. In your project, open the *.plist file and the two following entries :
+4. In your project, open the `*.plist` file and the two following entries :
 - "Privacy - Camera Usage Description" : "Camera is being used to scan documents"
 - "Privacy - Microphone Usage Description" : "Microphone is being used to record users speech during liveness session"
 
@@ -117,10 +117,9 @@ module.exports = NativeModules.IdcheckioModule;
 async requestPermissions() {
     try {
         const granted = await PermissionsAndroid.requestMultiple(
-            [PermissionsAndroid.PERMISSIONS.CAMERA, PermissionsAndroid.PERMISSIONS.RECORD_AUDIO]
+            [PermissionsAndroid.PERMISSIONS.CAMERA]
         )
-        if (granted[PermissionsAndroid.PERMISSIONS.CAMERA] === PermissionsAndroid.RESULTS.GRANTED &&
-            granted[PermissionsAndroid.PERMISSIONS.RECORD_AUDIO] === PermissionsAndroid.RESULTS.GRANTED) {} else {
+        if (granted[PermissionsAndroid.PERMISSIONS.CAMERA] === PermissionsAndroid.RESULTS.GRANTED) {} else {
             console.log("Permission denied")
         }
     } catch (err) {
@@ -139,7 +138,7 @@ preload() {
 5. Before capturing any document, you need to activate the licence. To do so, you have to use the `activate()` method.
 ```javascript
 activate() {
-    IdcheckioModule.activate("license", true, false)
+    IdcheckioModule.activate("license", true, false, true, "DEMO")
     .then(data => {
         console.log("Activated");
     },
@@ -188,13 +187,9 @@ activate() {
   };
 
   startOnline() {
-      var cisContext = {
-          'referenceDocUid': results.documentUid,
-          'referenceTaskUid': results.taskUid,
-          'folderUid': results.folderUid
-      };
-      IdcheckioModule.startOnline(Dictionnary.paramsLiveness, "license", cisContext, false)
+      IdcheckioModule.startOnline(Dictionnary.paramsIdOnline, {})
       .then(data => {
+          console.log(data);
           results = JSON.parse(data);
           this.response_server(results);
       },
@@ -205,6 +200,46 @@ activate() {
           console.log(err);
       });
   }
+```
+
+8. To just analyze a document, you have the method the `analyze()` method. You will receive the result in a string that can be parse into a json object.
+```javascript
+analyze(){
+    const options = {
+        title: 'Select Document',
+        storageOptions: {
+            skipBackup: true,
+            path: 'images',
+        },
+    };
+
+    ImagePicker.launchImageLibrary(options, (response) => {
+        if (response.didCancel) {
+            console.log('User cancelled image picker');
+        } else if (response.error) {
+            console.log('ImagePicker Error: ', response.error);
+        } else if (response.customButton) {
+            console.log('User tapped custom button: ', response.customButton);
+        } else {
+            const source = { uri: response.uri };
+            // You can also display the image using data:
+            // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+            IdcheckioModule.analyze(Dictionnary.paramsIdOnline, source.uri, null, true, {})
+            .then(data => {
+                console.log(data);
+                results = JSON.parse(data);
+                console.log(results);
+                this.response_server(results);
+            },
+            cause => {
+                console.log(cause);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        }
+    });
+}
 ```
 
 - ✅  &nbsp; To learn more informations on those methods and theirs parameters. Please refer to the official IDCheck.io sdk documentation.

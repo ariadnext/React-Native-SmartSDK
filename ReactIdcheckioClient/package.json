@@ -9,7 +9,8 @@
   "dependencies": {
     "react": "16.9.0",
     "react-idcheckio": "file:.yalc/react-idcheckio",
-    "react-native": "0.61.2"
+    "react-native": "0.61.2",
+    "react-native-image-picker": "^2.3.0"
   },
   "devDependencies": {
     "react-test-renderer": "16.9.0"
