@@ -126,7 +126,7 @@ RCT_EXPORT_METHOD(analyze:(NSDictionary*)params
     UIImage *side1 = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:url1]];
     UIImage *side2 = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:url2]];
     
-    [Idcheckio.shared analyzeWithParams: sdkParams side1Image:side1 side2Image:side2 online:online context:cisContext];
+    [Idcheckio.shared analyzeWithParams: sdkParams side1Image:side1 side2Image:side2 online:online cisContext:cisContext];
 
 }
 
