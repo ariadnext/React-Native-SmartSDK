@@ -22,7 +22,7 @@ RCT_EXPORT_METHOD(activate:(NSString*)licenceFileName
                   rejecter:(RCTPromiseRejectBlock)reject){
     [Idcheckio.shared activateWithLicenseFilename:licenceFileName extractData:extractData
                           disableAudioForLiveness:disableAudioForLiveness
-                                   sdkEnvironment:sdkEnvironment
+                                   sdkEnvironment:[sdkEnvironment lowercaseString]
                                        onComplete:^(NSException* error){
         if(error == nil){
             resolve(@"");
@@ -100,7 +100,7 @@ RCT_EXPORT_METHOD(startOnline:(NSDictionary*)params
         [[cameraView.bottomAnchor constraintEqualToAnchor:sdkViewController.view.bottomAnchor] setActive:true];
 
         [[[UIApplication sharedApplication] keyWindow].rootViewController presentViewController:sdkViewController animated:true completion:^{
-            [Idcheckio.shared startOnlineWith:cameraView cisContext:cisContext completion:^(NSError *error) {
+            [Idcheckio.shared startOnlineWith:cameraView cisContext:cisContext  externalAuthenticationDelegate:nil completion:^(NSError *error) {
                 if(error != nil){
                     reject(@"0", error.localizedDescription, nil);
                 }
