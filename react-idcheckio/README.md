@@ -136,7 +136,7 @@ preload() {
 5. Before capturing any document, you need to activate the licence. To do so, you have to use the `activate()` method.
 ```javascript
 activate() {
-    IdcheckioModule.activate("license", true, false)
+    IdcheckioModule.activate("license", true, false, true, "DEMO")
     .then(data => {
         console.log("Activated");
     },

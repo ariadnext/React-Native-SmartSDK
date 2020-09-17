@@ -60,7 +60,8 @@ public class IdcheckioActivity extends FragmentActivity implements IdcheckioInte
                 idcheckio.startOnline(new CISContext((cisContext.get("folderUid") != null) ? cisContext.get("folderUid").toString() : "",
                         (cisContext.get("referenceTaskUid") != null) ? cisContext.get("referenceTaskUid").toString() : "",
                         (cisContext.get("referenceDocUid") != null) ? cisContext.get("referenceDocUid").toString() : "",
-                        (cisContext.get("cisType") != null) ? CISType.valueOf(cisContext.get("cisType").toString()) : null));
+                        (cisContext.get("cisType") != null) ? CISType.valueOf(cisContext.get("cisType").toString()) : null,
+                        (cisContext.get("biometricConsent") != null) ? Boolean.parseBoolean(cisContext.get("biometricConsent").toString()) : null));
                 break;
             default:
                 break;

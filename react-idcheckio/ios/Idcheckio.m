@@ -139,6 +139,8 @@ RCT_EXPORT_METHOD(analyze:(NSDictionary*)params
             [cisContext setReferenceTaskUid:[cis objectForKey:key]];
         } else if([key isEqualToString:referenceDocUid]){
             [cisContext setReferenceDocUid:[cis objectForKey:key]];
+        }  else if([key isEqualToString:biometricConsent]){
+            [cisContext setBiometricConsentWithBiometricConsent:[cis objectForKey:key]];
         }
     }
     return cisContext;
