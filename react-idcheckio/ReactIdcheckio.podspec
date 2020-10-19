@@ -8,8 +8,8 @@ Pod::Spec.new do |s|
   s.platform     = :ios, "10.0"
   s.source       = { :path => "." }
   s.source_files = "ios", "ios/**/*.{h,m,swift}"
-  s.swift_version = '5.2.2'
+  s.swift_version = '5.3'
 
   s.dependency 'React'
-  s.dependency 'IDCheckIOSDK', '5.6.1-legacy'
+  s.dependency 'IDCheckIOSDK', '5.7.0-xcode12-legacy'
 end

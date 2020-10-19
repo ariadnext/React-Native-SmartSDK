@@ -58,7 +58,7 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-scalars:2.2.0"
     implementation "com.squareup.retrofit2:converter-gson:2.2.0"
     implementation "androidx.constraintlayout:constraintlayout:2.0.0-beta1"
-    implementation('com.ariadnext.android.idcheckio:sdk:5.6.1@aar') {
+    implementation('com.ariadnext.android.idcheckio:sdk:5.7.0@aar') {
         transitive = true
     }
     implementation 'androidx.multidex:multidex:2.0.1'
