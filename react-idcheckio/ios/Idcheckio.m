@@ -177,7 +177,7 @@ RCT_EXPORT_METHOD(analyze:(NSDictionary*)params
                 } else if([extraKey isEqualToString:ManualButtonTimer]){
                     Idcheckio.shared.extraParameters.manualButtonTimer = [extraParams doubleForKey:extraKey];
                 } else if([extraKey isEqualToString:MaxPictureFilesize]){
-                    [Idcheckio.shared.extraParameters setMaxPictureFilesize:[extraParams integerForKey:extraKey]];
+                    [Idcheckio.shared.extraParameters setMaxPictureFilesize:[extraParams stringForKey:extraKey]];
                 } else if([extraKey isEqualToString:FeedbackLevel]){
                     [Idcheckio.shared.extraParameters setFeedbackLevel:[extraParams objectForKey:extraKey]];
                 } else if([extraKey isEqualToString:Token]){

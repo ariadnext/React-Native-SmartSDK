@@ -3,7 +3,7 @@
 ## Prerequisites
 
 Before started, please make sure you've installed :
-- **npm** - `brew install node`
+- **npm** - `brew install node`, `npm install -g yarn`
 - **react-native** - `npm install -g react-native-cli`, `npm install -g react`, `npm install -g react-native`
 - **yalc** - `npm install -g yalc`
 
@@ -54,14 +54,13 @@ source 'https://git-externe.rennes.ariadnext.com/idcheckio/axt-podspecs.git'
 ```
  - Add `use_frameworks!` before the `use_native_modules!`
 
-2. Retrieve the sdk using `pod install`
-- ⚠️⚠️  &nbsp; You will need to have git lfs installed and configured before using this command. Check the official documentation for more informations. &nbsp;⚠️⚠️
+2. Retrieve the sdk using `pod install --repo-update`
+- ⚠️⚠️  &nbsp; You will need to have a .netrc file configurated with our credentials. Check the official documentation for more informations. &nbsp;⚠️⚠️
 
 3. Add the licence file to your ios project.
 
 4. In your project, open the `*.plist` file and the two following entries :
 - "Privacy - Camera Usage Description" : "Camera is being used to scan documents"
-- "Privacy - Microphone Usage Description" : "Microphone is being used to record users speech during liveness session"
 
 #### Android
 
@@ -136,7 +135,7 @@ preload() {
 5. Before capturing any document, you need to activate the licence. To do so, you have to use the `activate()` method.
 ```javascript
 activate() {
-    IdcheckioModule.activate("license", true, false, true, "DEMO")
+    IdcheckioModule.activate("license", true, false)
     .then(data => {
         console.log("Activated");
     },
