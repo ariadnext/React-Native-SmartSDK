@@ -23,7 +23,6 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.bridge.ReadableNativeMap;
 
 import java.util.HashMap;
 
@@ -40,6 +39,10 @@ public class IdcheckioModule extends ReactContextBaseJavaModule implements Idche
      * TAG
      */
     private static final String TAG = "IdcheckioModule";
+    /**
+     * Error when user back
+     */
+    private static final String USER_ABORT = "USER_ABORT";
     /**
      * Flag to start the sdk offline mode
      */
@@ -68,8 +71,12 @@ public class IdcheckioModule extends ReactContextBaseJavaModule implements Idche
                         String result = intent.getExtras().getString("IDCHECKIO_RESULT", "{}");
                         mPromise.resolve(result);
                     } else if(resultCode == Activity.RESULT_CANCELED){
-                        String error = intent.getExtras().getString("ERROR_MSG", "{}");
-                        mPromise.reject(TAG, error);
+                        if(intent != null){
+                            String error = intent.getExtras().getString("ERROR_MSG", "{}");
+                            mPromise.reject(TAG, error);
+                        } else {
+                            mPromise.reject(TAG, USER_ABORT);
+                        }
                     }
                 }
             }

@@ -23,33 +23,29 @@ import java.util.HashMap;
 
 public class IdcheckioActivity extends FragmentActivity implements IdcheckioInteractionInterface {
     private final static int CONTAINER_ID = 123481562;
-    private HashMap<String, Object> params;
-    private HashMap<String, Object> cisContext;
-    private String action;
-    private FrameLayout rootLayout;
 
     @Override
     protected void onCreate(@androidx.annotation.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        this.rootLayout = new FrameLayout(this);
-        this.rootLayout.setId(CONTAINER_ID);
-        this.rootLayout.setBackground(new ColorDrawable(Color.BLACK));
-        setContentView(this.rootLayout);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        FrameLayout rootLayout = new FrameLayout(this);
+        rootLayout.setId(CONTAINER_ID);
+        rootLayout.setBackground(new ColorDrawable(Color.BLACK));
+        setContentView(rootLayout);
 
         Intent intent = getIntent();
-        this.params = (HashMap<String, Object>) intent.getSerializableExtra("PARAMS");
-        this.cisContext = (HashMap<String, Object>) intent.getSerializableExtra("CIS");
-        this.action = intent.getStringExtra("ACTION");
-        this.doCreate();
+        HashMap<String, Object> params = (HashMap<String, Object>) intent.getSerializableExtra("PARAMS");
+        HashMap<String, Object> cisContext = (HashMap<String, Object>) intent.getSerializableExtra("CIS");
+        String action = intent.getStringExtra("ACTION");
+        doCreate(params, cisContext, action);
     }
 
-    private void doCreate() {
+    private void doCreate(HashMap<String, Object> params, HashMap<String, Object> cisContext, String action) {
         IdcheckioView.Builder idcheckioView = new IdcheckioView.Builder()
                 .listener(this);
-        ParameterUtils.parseParameters(idcheckioView, this.params);
+        ParameterUtils.parseParameters(idcheckioView, params);
         IdcheckioView idcheckio = idcheckioView.build();
         getSupportFragmentManager().beginTransaction().replace(CONTAINER_ID, idcheckio).commit();
         switch (action) {
