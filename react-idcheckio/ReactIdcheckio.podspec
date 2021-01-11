@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "ReactIdcheckio"
-  s.version      = "5.8.0"
+  s.version      = "5.9.0"
   s.summary      = "React Native plugin for IDCheck.io Mobile SDK for iOS"
   s.homepage     = "https://www.github.com//react-idcheckio"
   s.license      = { :type => "ISC" }
