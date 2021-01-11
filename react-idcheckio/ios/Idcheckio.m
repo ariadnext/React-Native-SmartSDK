@@ -173,7 +173,7 @@ RCT_EXPORT_METHOD(analyze:(NSDictionary*)params
             id extraParams = [params objectForKey:key];
             for(NSString* extraKey in [extraParams allKeys]){
                 if([extraKey isEqualToString:Language]){
-                    Idcheckio.shared.extraParameters.language = [extraParams objectForKey:extraKey];
+                    [Idcheckio.shared.extraParameters setLanguage:[extraParams objectForKey:extraKey]];
                 } else if([extraKey isEqualToString:ManualButtonTimer]){
                     Idcheckio.shared.extraParameters.manualButtonTimer = [extraParams doubleForKey:extraKey];
                 } else if([extraKey isEqualToString:MaxPictureFilesize]){

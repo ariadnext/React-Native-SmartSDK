@@ -12,5 +12,5 @@ Pod::Spec.new do |s|
 
   s.dependency 'React'
   #If you change the version number, don't forget the '-legacy', it's mandatory
-  s.dependency 'IDCheckIOSDK', '5.8.0-xcode12-legacy'
+  s.dependency 'IDCheckIOSDK', '5.9.3-legacy'
 end
