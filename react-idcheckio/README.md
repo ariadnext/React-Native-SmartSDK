@@ -4,7 +4,6 @@
 
 Before started, please make sure you've installed :
 - **npm** - `brew install node`, `npm install -g yarn`
-- **react-native** - `npm install -g react-native-cli`, `npm install -g react`, `npm install -g react-native`
 - **yalc** - `npm install -g yalc`
 
 ## Getting started

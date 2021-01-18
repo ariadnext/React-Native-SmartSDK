@@ -10,7 +10,6 @@ Pod::Spec.new do |s|
   s.source_files = "ios", "ios/**/*.{h,m,swift}"
   s.swift_version = '5.3.1'
 
-  s.dependency 'React'
-  #If you change the version number, don't forget the '-legacy', it's mandatory
-  s.dependency 'IDCheckIOSDK', '5.9.3-legacy'
+  s.dependency 'React-Core'
+  s.dependency 'IDCheckIOSDK', '5.9.3'
 end
