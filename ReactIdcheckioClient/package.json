@@ -1,0 +1,21 @@
+{
+  "name": "ReactIdcheckioClient",
+  "version": "6.0.0",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start"
+  },
+  "dependencies": {
+    "@react-native-picker/picker": "^1.16.1",
+    "react-idcheckio": "file:.yalc/react-idcheckio",
+    "react": "17.0.1",
+    "react-native": "0.64.2",
+    "react-native-image-picker": "^4.0.3"
+  },
+  "devDependencies": {},
+  "jest": {
+    "preset": "react-native"
+  }
+}

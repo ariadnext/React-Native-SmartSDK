@@ -1,0 +1,52 @@
+buildscript {
+    ext.safeExtGet = {prop, fallback ->
+        rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+    }
+    repositories {
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        // Matches recent template from React Native (0.60)
+        // https://github.com/facebook/react-native/blob/0.60-stable/template/android/build.gradle#L16
+        classpath("com.android.tools.build:gradle:${safeExtGet('gradlePluginVersion', '3.4.1')}")
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion safeExtGet('compileSdkVersion', 28)
+    buildToolsVersion safeExtGet('buildToolsVersion', "28.0.3")
+
+    defaultConfig {
+        minSdkVersion safeExtGet('minSdkVersion', 19)
+        targetSdkVersion safeExtGet('targetSdkVersion', 28)
+        versionCode 1
+        multiDexEnabled true
+        versionName "1.0"
+    }
+}
+
+repositories {
+    mavenLocal()
+    maven {
+        // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+        url("$rootDir/../node_modules/react-native/android")
+    }
+    maven {
+        // Android JSC is installed from npm
+        url("$rootDir/../node_modules/jsc-android/dist")
+    }
+    google()
+    jcenter()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation "com.facebook.react:react-native:${safeExtGet('reactnativeVersion', '+')}"
+    implementation('com.ariadnext.android.idcheckio:sdk:6.0.0@aar') {
+        transitive = true
+    }
+}
