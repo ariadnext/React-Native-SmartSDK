@@ -75,9 +75,6 @@ public class ParameterUtils {
                     case "maxPictureFilesize":
                         idcheckioView.maxPictureFilesize(FileSize.valueOf(value.toString()));
                         break;
-                    case "token":
-                        idcheckioView.token(value.toString());
-                        break;
                     case "confirmAbort":
                         idcheckioView.confirmAbort(Boolean.parseBoolean(value.toString()));
                         break;

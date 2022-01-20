@@ -46,7 +46,7 @@ repositories {
 
 dependencies {
     implementation "com.facebook.react:react-native:${safeExtGet('reactnativeVersion', '+')}"
-    implementation('com.ariadnext.android.idcheckio:sdk:6.0.0@aar') {
+    implementation('com.ariadnext.android.idcheckio:sdk:6.1.0@aar') {
         transitive = true
     }
 }

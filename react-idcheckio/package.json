@@ -1,7 +1,7 @@
 {
   "name": "react-idcheckio",
   "title": "React Idcheckio",
-  "version": "6.0.0",
+  "version": "6.1.0",
   "description": "React Native plugin for IDCheck.io Mobile SDK",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,7 @@
   "keywords": [
     "react-native"
   ],
-  "author": "AriadNEXT",
+  "author": "ARIADNEXT",
   "license": "ISC",
   "readmeFilename": "README.md",
   "private": false,

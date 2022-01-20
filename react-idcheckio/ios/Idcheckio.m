@@ -174,7 +174,7 @@ RCT_EXPORT_METHOD(analyze:(NSDictionary*)params
             [sdkParams setIntegrityCheck: integrity];
         } else if ([key isEqualToString:onlineConfigKey]){
             id onlineConfigParams = [params objectForKey:key];
-            OnlineConfig *onlineConfig = [[OnlineConfig alloc] init];
+            OnlineConfig *onlineConfig = [sdkParams onlineConfig];
             onlineConfig.isReferenceDocument = [[onlineConfigParams objectForKey:isReferenceDocumentKey] boolValue];
             [onlineConfig setCheckType:[onlineConfigParams objectForKey:checkTypeKey]];
             if ([onlineConfigParams objectForKey:cisTypeKey] != [NSNull null]) {
@@ -187,7 +187,6 @@ RCT_EXPORT_METHOD(analyze:(NSDictionary*)params
                 [onlineConfig setBiometricConsentWithBiometricConsent:[[onlineConfigParams objectForKey:biometricConsentKey] boolValue]];
             }
             onlineConfig.enableManualAnalysis = [[onlineConfigParams objectForKey:enableManualAnalysisKey] boolValue];
-            [sdkParams setOnlineConfig:onlineConfig];
         } else if ([key isEqualToString:scanBothSidesKey]) {
             [sdkParams setScanBothSides:[params objectForKey:key]];
         } else if ([key isEqualToString:useHdKey]) {
@@ -200,8 +199,6 @@ RCT_EXPORT_METHOD(analyze:(NSDictionary*)params
             [Idcheckio.shared.extraParameters setMaxPictureFilesize:[params objectForKey:key]];
         } else if([key isEqualToString:feedbackLevelKey]){
             [Idcheckio.shared.extraParameters setFeedbackLevel:[params objectForKey:key]];
-        } else if([key isEqualToString:tokenKey]){
-            [Idcheckio.shared.extraParameters setToken:[params objectForKey:key]];
         } else if([key isEqualToString:confirmAbortKey]){
             Idcheckio.shared.extraParameters.confirmAbort = [[params objectForKey:key] boolValue];
         } else if([key isEqualToString:adjustCropKey]){
