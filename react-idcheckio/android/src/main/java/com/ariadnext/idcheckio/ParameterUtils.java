@@ -1,8 +1,30 @@
 package com.ariadnext.idcheckio;
 
-import android.util.Log;
+import static com.ariadnext.idcheckio.IdcheckioConst.ADJUST_CROP;
+import static com.ariadnext.idcheckio.IdcheckioConst.BIOMETRIC_CONSENT;
+import static com.ariadnext.idcheckio.IdcheckioConst.CIS_TYPE;
+import static com.ariadnext.idcheckio.IdcheckioConst.CONFIRM_ABORT;
+import static com.ariadnext.idcheckio.IdcheckioConst.CONFIRM_TYPE;
+import static com.ariadnext.idcheckio.IdcheckioConst.DATA_REQUIREMENT;
+import static com.ariadnext.idcheckio.IdcheckioConst.DOCUMENT_TYPE;
+import static com.ariadnext.idcheckio.IdcheckioConst.DOC_LIVENESS;
+import static com.ariadnext.idcheckio.IdcheckioConst.ENABLE_MANUAL_ANALYSIS;
+import static com.ariadnext.idcheckio.IdcheckioConst.FACE_DETECTION;
+import static com.ariadnext.idcheckio.IdcheckioConst.FEEDBACK_LEVEL;
+import static com.ariadnext.idcheckio.IdcheckioConst.FOLDER_UID;
+import static com.ariadnext.idcheckio.IdcheckioConst.INTEGRITY_CHECK;
+import static com.ariadnext.idcheckio.IdcheckioConst.IS_REFERENCE_DOC;
+import static com.ariadnext.idcheckio.IdcheckioConst.LANGUAGE;
+import static com.ariadnext.idcheckio.IdcheckioConst.MANUAL_BUTTON_TIMER;
+import static com.ariadnext.idcheckio.IdcheckioConst.MAX_PICTURE_FILESIZE;
+import static com.ariadnext.idcheckio.IdcheckioConst.ONLINE_CONFIG;
+import static com.ariadnext.idcheckio.IdcheckioConst.ORIENTATION;
+import static com.ariadnext.idcheckio.IdcheckioConst.READ_EMRTD;
+import static com.ariadnext.idcheckio.IdcheckioConst.SCAN_BOTH_SIDES;
+import static com.ariadnext.idcheckio.IdcheckioConst.SIDE_1_EXTRACTION;
+import static com.ariadnext.idcheckio.IdcheckioConst.SIDE_2_EXTRACTION;
+import static com.ariadnext.idcheckio.IdcheckioConst.USE_HD;
 
-import com.ariadnext.idcheckio.sdk.bean.CheckType;
 import com.ariadnext.idcheckio.sdk.bean.ConfirmationType;
 import com.ariadnext.idcheckio.sdk.bean.DataRequirement;
 import com.ariadnext.idcheckio.sdk.bean.DocumentType;
@@ -23,91 +45,138 @@ import java.util.Map;
 
 public class ParameterUtils {
 
-    public static void parseParameters(IdcheckioView.Builder idcheckioView, HashMap<String, Object> params){
-        try {
-            for (Map.Entry<String, Object> entries : params.entrySet()) {
-                String key = entries.getKey();
-                Object value = entries.getValue();
-                switch (key) {
-                    case "docType":
-                        idcheckioView.docType(DocumentType.valueOf(value.toString()));
-                        break;
-                    case "orientation":
-                        idcheckioView.orientation(Orientation.valueOf(value.toString()));
-                        break;
-                    case "confirmationType":
-                        idcheckioView.confirmType(ConfirmationType.valueOf(value.toString()));
-                        break;
-                    case "useHd":
-                        idcheckioView.useHd(Boolean.parseBoolean(value.toString()));
-                        break;
-                    case "integrityCheck":
-                        HashMap<String, Object> integrityCheck = (HashMap<String, Object>) value;
-                        boolean readEmrtd = Boolean.parseBoolean(integrityCheck.get("readEmrtd").toString());
-                        idcheckioView.integrityCheck(new IntegrityCheck(readEmrtd));
-                        break;
-                    case "scanBothSides":
-                        idcheckioView.scanBothSides(Forceable.valueOf(value.toString()));
-                        break;
-                    case "sideOneExtraction":
-                        HashMap<String, String> extraction1 = (HashMap<String, String>) value;
-                        idcheckioView.sideOneExtraction(new Extraction(DataRequirement.valueOf(extraction1.get("codeline")),
-                                FaceDetection.valueOf(extraction1.get("faceDetection"))));
-                        break;
-                    case "sideTwoExtraction":
-                        HashMap<String, String> extraction2 = (HashMap<String, String>) value;
-                        idcheckioView.sideTwoExtraction(new Extraction(DataRequirement.valueOf(extraction2.get("codeline")),
-                                FaceDetection.valueOf(extraction2.get("faceDetection"))));
-                        break;
-                    case "language":
-                        idcheckioView.language(Language.valueOf(value.toString()));
-                        break;
-                    case "manualButtonTimer":
-                        double doubleValue = Double.parseDouble(value.toString());
-                        idcheckioView.manualButtonTimer((int) doubleValue);
-                        break;
-                    case "feedbackLevel":
-                        idcheckioView.feedbackLevel(FeedbackLevel.valueOf(value.toString()));
-                        break;
-                    case "adjustCrop":
-                        idcheckioView.adjustCrop(Boolean.parseBoolean(value.toString()));
-                        break;
-                    case "maxPictureFilesize":
-                        idcheckioView.maxPictureFilesize(FileSize.valueOf(value.toString()));
-                        break;
-                    case "confirmAbort":
-                        idcheckioView.confirmAbort(Boolean.parseBoolean(value.toString()));
-                        break;
-                    case "onlineConfig":
-                        HashMap<String, Object> onlineConfig = (HashMap<String, Object>) value;
-                        boolean isReferenceDocument = Boolean.parseBoolean(onlineConfig.get("isReferenceDocument").toString());
-                        CheckType checkType = CheckType.valueOf(onlineConfig.get("checkType").toString());
-                        CISType cisType;
-                        if(onlineConfig.get("cisType") != null){
-                            cisType = CISType.valueOf(onlineConfig.get("cisType").toString());
-                        } else {
-                            cisType = null;
-                        }
-                        String folderUid;
-                        if(onlineConfig.get("folderUid") != null){
-                            folderUid = onlineConfig.get("folderUid").toString();
-                        } else {
-                            folderUid = null;
-                        }
-                        Boolean biometricConsent;
-                        if(onlineConfig.get("biometricConsent") != null){
-                            biometricConsent = Boolean.parseBoolean(onlineConfig.get("biometricConsent").toString());
-                        } else {
-                            biometricConsent = null;
-                        }
-                        boolean enableManualAnalysis = Boolean.parseBoolean(onlineConfig.get("enableManualAnalysis").toString());
-                        idcheckioView.onlineConfig(new OnlineConfig(isReferenceDocument, checkType, cisType, folderUid, biometricConsent, enableManualAnalysis));
-                    default:
-                        break;
-                }
+    public static IdcheckioView.Builder getIDCheckioViewFromCall(HashMap<String, Object> params) {
+        IdcheckioView.Builder idcheckioView = new IdcheckioView.Builder();
+        for (Map.Entry<String, Object> entries : params.entrySet()) {
+            String key = entries.getKey();
+            Object value = entries.getValue();
+            switch (key) {
+                case DOCUMENT_TYPE:
+                    idcheckioView.docType(DocumentType.valueOf(value.toString()));
+                    break;
+                case ORIENTATION:
+                    idcheckioView.orientation(Orientation.valueOf(value.toString()));
+                    break;
+                case CONFIRM_TYPE:
+                    idcheckioView.confirmType(ConfirmationType.valueOf(value.toString()));
+                    break;
+                case INTEGRITY_CHECK:
+                    idcheckioView.integrityCheck(getIntegrityCheck((HashMap<String, Object>) value));
+                    break;
+                case USE_HD:
+                    idcheckioView.useHd(Boolean.parseBoolean(value.toString()));
+                    break;
+                case SCAN_BOTH_SIDES:
+                    idcheckioView.scanBothSides(Forceable.valueOf(value.toString()));
+                    break;
+                case SIDE_1_EXTRACTION:
+                    idcheckioView.sideOneExtraction(getExtraction((HashMap<String, String>) value));
+                    break;
+                case SIDE_2_EXTRACTION:
+                    idcheckioView.sideTwoExtraction(getExtraction((HashMap<String, String>) value));
+                    break;
+                case ONLINE_CONFIG:
+                    idcheckioView.onlineConfig(getOnlineConfig((HashMap<String, Object>) value));
+                    break;
+                case LANGUAGE:
+                    idcheckioView.language(Language.valueOf(value.toString()));
+                    break;
+                case MANUAL_BUTTON_TIMER:
+                    double doubleValue = Double.parseDouble(value.toString());
+                    idcheckioView.manualButtonTimer((int) doubleValue);
+                    break;
+                case FEEDBACK_LEVEL:
+                    idcheckioView.feedbackLevel(FeedbackLevel.valueOf(value.toString()));
+                    break;
+                case ADJUST_CROP:
+                    idcheckioView.adjustCrop(Boolean.parseBoolean(value.toString()));
+                    break;
+                case MAX_PICTURE_FILESIZE:
+                    idcheckioView.maxPictureFilesize(FileSize.valueOf(value.toString()));
+                    break;
+                case CONFIRM_ABORT:
+                    idcheckioView.confirmAbort(Boolean.parseBoolean(value.toString()));
+                    break;
             }
-        } catch (IllegalArgumentException ex) {
-            Log.e("IdcheckioActivity", "Failed to parse parameters", ex);
         }
+        return  idcheckioView;
+    }
+
+    private static IntegrityCheck getIntegrityCheck(HashMap<String, Object> integrityMap) {
+        boolean readEmrtd = false;
+        boolean docLiveness = false;
+
+        if(integrityMap.containsKey(READ_EMRTD)) {
+            Object readEmrtdOpt = integrityMap.get(READ_EMRTD);
+            if(readEmrtdOpt != null) {
+                readEmrtd = Boolean.parseBoolean(readEmrtdOpt.toString());
+            }
+        }
+        if(integrityMap.containsKey(DOC_LIVENESS)) {
+            Object docLivenessOpt = integrityMap.get(DOC_LIVENESS);
+            if(docLivenessOpt != null) {
+                docLiveness = Boolean.parseBoolean(docLivenessOpt.toString());
+            }
+        }
+        return new IntegrityCheck(readEmrtd, docLiveness);
+    }
+
+    private static Extraction getExtraction(HashMap<String, String> integrityMap) {
+        DataRequirement dataRequirement = DataRequirement.DISABLED;
+        FaceDetection faceDetection = FaceDetection.DISABLED;
+
+        if(integrityMap.containsKey(DATA_REQUIREMENT)) {
+            String dataOpt = integrityMap.get(DATA_REQUIREMENT);
+            if(dataOpt != null) {
+                dataRequirement = DataRequirement.valueOf(dataOpt);
+            }
+        }
+        if(integrityMap.containsKey(FACE_DETECTION)) {
+            String faceOpt = integrityMap.get(FACE_DETECTION);
+            if(faceOpt != null) {
+                faceDetection = FaceDetection.valueOf(faceOpt);
+            }
+        }
+        return new Extraction(dataRequirement, faceDetection);
+    }
+
+    private static OnlineConfig getOnlineConfig(HashMap<String, Object> configMap) {
+        OnlineConfig onlineConfig = new OnlineConfig();
+
+        if(configMap.containsKey(BIOMETRIC_CONSENT)) {
+            Object bioOpt = configMap.get(BIOMETRIC_CONSENT);
+            if(bioOpt != null) {
+                onlineConfig.setBiometricConsent(Boolean.parseBoolean(bioOpt.toString()));
+            }
+        }
+
+        if(configMap.containsKey(IS_REFERENCE_DOC)) {
+            Object refDocOpt = configMap.get(IS_REFERENCE_DOC);
+            if(refDocOpt != null) {
+                onlineConfig.setReferenceDocument(Boolean.parseBoolean(refDocOpt.toString()));
+            }
+        }
+
+        if(configMap.containsKey(ENABLE_MANUAL_ANALYSIS)) {
+            Object manualOpt = configMap.get(ENABLE_MANUAL_ANALYSIS);
+            if(manualOpt != null) {
+                onlineConfig.setEnableManualAnalysis(Boolean.parseBoolean(manualOpt.toString()));
+            }
+        }
+
+        if(configMap.containsKey(FOLDER_UID)) {
+            Object folderOpt = configMap.get(FOLDER_UID);
+            if(folderOpt != null) {
+                onlineConfig.setFolderUid(folderOpt.toString());
+            }
+        }
+
+        if(configMap.containsKey(CIS_TYPE)) {
+            Object cisOpt = configMap.get(CIS_TYPE);
+            if(cisOpt != null) {
+                onlineConfig.setCisType(CISType.valueOf(cisOpt.toString()));
+            }
+        }
+        return onlineConfig;
     }
 }

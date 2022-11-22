@@ -3,7 +3,7 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 source 'https://github.com/CocoaPods/Specs.git'
 source 'https://git-externe.rennes.ariadnext.com/idcheckio/axt-podspecs.git'
 
-platform :ios, '10.0'
+platform :ios, '12.0'
 
 target 'ReactIdcheckioClient' do
   use_frameworks!

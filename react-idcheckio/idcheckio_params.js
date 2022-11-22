@@ -191,26 +191,21 @@ export class Extraction {
 }
 
 export class IntegrityCheck {
-    constructor(readEmrtd){
-        if(typeof readEmrtd == "boolean"){
-            this.readEmrtd = readEmrtd
-        } else {
-            throw new Error("readEmrtd must be a boolean")
-        }
+    constructor({readEmrtd = false, docLiveness = false}={}){
+        this.readEmrtd = readEmrtd
+        this.docLiveness = docLiveness
     }
 }
 
 export class OnlineConfig {
     constructor({
         isReferenceDocument = false,
-        checkType = CheckType.CHECK_FULL,
         cisType = null,
         folderUid = null,
         biometricConsent = null,
         enableManualAnalysis = false
     }={}){
         this.isReferenceDocument = isReferenceDocument
-        this.checkType = checkType
         this.cisType = cisType
         this.folderUid = folderUid
         this.biometricConsent = biometricConsent
@@ -269,11 +264,6 @@ export const FaceDetection = {
     DISABLED:"DISABLED"
 }
 
-export const CheckType = { 
-    CHECK_FULL:"CHECK_FULL", 
-    CHECK_FAST:"CHECK_FAST"
-}
-
 export const Language = { 
     fr:"fr", 
     en:"en", 
@@ -281,7 +271,11 @@ export const Language = {
     es:"es", 
     ro:"ro", 
     cs:"cs", 
-    pt:"pt" 
+    pt:"pt",
+    de:"de",
+    it:"it",
+    nl:"nl",
+    ar:"ar"
 }
 
 export const FeedbackLevel = { 
@@ -295,10 +289,6 @@ export const FileSize = {
     TWO_MEGA_BYTES:"TWO_MEGA_BYTES", 
     THREE_MEGA_BYTES:"THREE_MEGA_BYTES", 
     FOUR_MEGA_BYTES:"FOUR_MEGA_BYTES", 
-    FIVE_MEGA_BYTES:"FIVE_MEGA_BYTES", 
-    SIX_MEGA_BYTES:"SIX_MEGA_BYTES", 
-    SEVEN_MEGA_BYTES:"SEVEN_MEGA_BYTES", 
-    HEIGHT_MEGA_BYTES:"HEIGHT_MEGA_BYTES" 
 }
 
 export const CISType = { 

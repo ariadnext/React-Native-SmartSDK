@@ -1,4 +1,4 @@
-package com.reactidcheckioclient;
+package com.ariadnext.idcheckio.react.client;
 
 import com.facebook.react.ReactActivity;
 

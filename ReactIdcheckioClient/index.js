@@ -13,8 +13,12 @@ import {
     Text,
     View,
     Button,
+    TextInput
 } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
+
+
+const demoToken = "YOUR_ACTIVATION_TOKEN"
 
 class Resultat extends Component {
 
@@ -23,13 +27,22 @@ class Resultat extends Component {
         this.state = {
             sdkActivated: false,
             sdkResult: null,
+            isIps: false,
+            folderUid: "",
             selectedValue: 0
         };
     }
 
     setSelectedValue(value){
         this.setState({
+            isIps: value == 10,
             selectedValue: value
+        })
+    }
+
+    setFolderUid(value){
+        this.setState({
+            folderUid: value
         })
     }
 
@@ -61,7 +74,7 @@ class Resultat extends Component {
                     this.response_server(results);
                 },
                 cause => {
-                    console.log(cause);
+                    this.showError(cause);
                 })
                 .catch(err => {
                     console.log(err);
@@ -74,7 +87,7 @@ class Resultat extends Component {
                     this.response_server(results);
                 },
                 cause => {
-                    console.log(cause);
+                    this.showError(cause);
                 })
                 .catch(err => {
                     console.log(err);
@@ -83,14 +96,40 @@ class Resultat extends Component {
         }
     }
 
+    startIps() {
+        IdcheckioModule.startIps(this.state.folderUid)
+        .then(data => {
+            console.log(data);
+            let results = JSON.parse(data)
+            this.response_server(results);
+            console.log("Session IPS Ok !")
+        },
+        cause => {
+            this.showError(cause);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
+
+    showError(error) {
+        console.log(error);
+        var errorMsg = JSON.parse(error.message.replace("\n", "\\n"));
+        console.log("cause: " + errorMsg.cause);
+        console.log("details: " + errorMsg.details);
+        console.log("message: " + errorMsg.message);
+        console.log("subCause: " + errorMsg.subCause);
+        alert(errorMsg.message);
+    }
+
     activate() {
-        IdcheckioModule.activate("license", true, true, "DEMO")
+        IdcheckioModule.activate(demoToken, true)
         .then(data => {
             this.setState({sdkActivated: true})
             console.log("Activated");
         },
         cause => {
-            console.log(cause);
+            this.showError(cause);
         })
         .catch(err => {
             console.log(err);
@@ -128,7 +167,7 @@ class Resultat extends Component {
                     this.response_server(results);
                 },
                 cause => {
-                    console.log(cause);
+                    this.showError(cause);
                 })
                 .catch(err => {
                     console.log(err);
@@ -160,13 +199,15 @@ class Resultat extends Component {
                         <Picker.Item label={Dictionnary.paramsList[7].name} value='7'/>
                         <Picker.Item label={Dictionnary.paramsList[8].name} value='8'/>
                         <Picker.Item label={Dictionnary.paramsList[9].name} value='9'/>
+                        <Picker.Item label='Start Ips' value='10'/>
                     </Picker>
                 </View>
+                <TextInput style={styles.input} display= {(this.state.isIps)? 'flex' : 'none'} onChangeText={(text) => this.setFolderUid(text)}/>
                 <Button disabled = {this.state.sdkActivated} onPress = {() => {this.activate()}}
                     title = {(this.state.sdkActivated)? "SDK already activated" : "Activate SDK"}
                 />
-                <Button disabled = {!this.state.sdkActivated} onPress = {() => {this.capture()}}
-                    title = {(this.state.sdkActivated)? "Capture Document" : "SDK not activated"}
+                <Button disabled = {!this.state.sdkActivated} onPress = {(this.state.isIps)? () => {this.startIps()} : () => {this.capture()}}
+                    title = {(this.state.sdkActivated)? ((this.state.isIps)? "Start ips session" : "Capture Document") : "SDK not activated"}
                 />
                 <Text style = {styles.welcome}>
                     {(this.state.sdkResult != null)?
@@ -207,6 +248,13 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: '#333333',
         marginBottom: 5,
+    },
+    input: {
+        borderColor: "gray",
+        width: "60%",
+        borderWidth: 1,
+        borderRadius: 10,
+        padding: 10,
     },
     activationText: {
         fontSize: 24,

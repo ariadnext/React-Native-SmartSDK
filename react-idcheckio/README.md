@@ -4,7 +4,7 @@
 
 Before started, please make sure you've installed :
 - **npm** - `brew install node`, `npm install -g yarn`
-- **react-native** - `npm install -g react-native-cli`, `npm install -g react`, `npm install -g react-native`
+- **react-native** - `npm install -g react`, `npm install -g react-native`
 - **yalc** - `npm install -g yalc`
 
 ## Getting started
@@ -57,9 +57,7 @@ source 'https://git-externe.rennes.ariadnext.com/idcheckio/axt-podspecs.git'
 2. Retrieve the sdk using `pod install --repo-update`
 - ⚠️⚠️  &nbsp; You will need to have a .netrc file configurated with our credentials. Check the official documentation for more informations. &nbsp;⚠️⚠️
 
-3. Add the licence file to your ios project.
-
-4. In your project, open the `*.plist` file and the two following entries :
+3. In your project, open the `*.plist` file and the two following entries :
 - "Privacy - Camera Usage Description" : "Camera is being used to scan documents"
 
 #### Android
@@ -95,9 +93,6 @@ maven {
 }
 ```
 
-3. Put the licence file in  `android/app/src/main/assets/`
-- ⚠️  &nbsp; Don't forget to change your `signingConfig` with the certificate you give us to create the licence. &nbsp;⚠️
-
 ## Usage
 
 1. Create a file `IdcheckioModule.js` and copy the following lines :
@@ -109,7 +104,7 @@ module.exports = NativeModules.IdcheckioModule;
 
 2. Open your `index.js` or any other files where you want to use the IdcheckioModule and add `import IdcheckioModule from './IdcheckioModule';` to the imports at the top of the file.
 
-3.  Before starting, the sdk will ask for permissions (`CAMERA` or/and  `RECORD_AUDIO`). But you can if you want ask them by youself before using the following method :
+3. (Optional) Before starting, the sdk will ask for permissions (`CAMERA`). But you can if you want ask them by youself before using the following method :
 ```javascript
 async requestPermissions() {
     try {
@@ -132,15 +127,16 @@ preload() {
 }
 ```
 
-5. Before capturing any document, you need to activate the licence. To do so, you have to use the `activate()` method.
+5. Before capturing any document, you need to activate the sdk. To do so, add your activation token on the javascript side and use it to call the `activate()` method.
 ```javascript
 activate() {
-    IdcheckioModule.activate("license", true, false)
+    IdcheckioModule.activate(demoToken, true)
     .then(data => {
+        this.setState({sdkActivated: true})
         console.log("Activated");
     },
     cause => {
-        console.log(cause);
+        this.showError(cause);
     })
     .catch(err => {
         console.log(err);
@@ -150,37 +146,33 @@ activate() {
 
 6. To start the capture of a document, you have to call the start method with your wanted parameters. Check the `Dictionnary.js` file to find some recommandations on the parameters. You will then receive the result in a string that can be parse into a json object.
 ```javascript
-  export const paramsID = new IDCheckioParamsBuilder()
-  .setDocType(DocumentType.ID)
-  .setOrientation(IDCheckioOrientation.PORTRAIT)
-  .setIntegrityCheck(new IntegrityCheck(true))
-  .setUseHd(false)
-  .setConfirmationType(ConfirmationType.DATA_OR_PICTURE)
-  .setScanBothSides(ScanBothSides.ENABLED)
-  .setSideOneExtraction(new Extraction(Codeline.VALID, FaceDetection.ENABLED))
-  .setSideTwoExtraction(new Extraction(Codeline.REJECT, FaceDetection.DISABLED))
-  .setLanguage(Language.fr)
-  .setManualButtonTimer(10)
-  .setMaxPictureFilesize(FileSize.TWO_MEGA_BYTES)
-  .setFeedbackLevel(FeedbackLevel.ALL)
-  .setAdjustCrop(false)
-  .setConfirmAbort(false)
-  .setOnlineConfig(new OnlineConfig({ checkType: CheckType.CHECK_FAST, isReferenceDocument: true }))
-  .build()
+export const paramsIDOffline = new IDCheckioParamsBuilder()
+.setDocType(DocumentType.ID)
+.setOrientation(IDCheckioOrientation.PORTRAIT)
+.setUseHd(false)
+.setConfirmationType(ConfirmationType.DATA_OR_PICTURE)
+.setScanBothSides(ScanBothSides.ENABLED)
+.setSideOneExtraction(new Extraction(Codeline.VALID, FaceDetection.ENABLED))
+.setSideTwoExtraction(new Extraction(Codeline.REJECT, FaceDetection.DISABLED))
+.setLanguage(Language.fr)
+.setManualButtonTimer(10)
+.setMaxPictureFilesize(FileSize.TWO_MEGA_BYTES)
+.setFeedbackLevel(FeedbackLevel.ALL)
+.setAdjustCrop(false)
+.setConfirmAbort(false)
+.build()
 
-  start() {
-      IdcheckioModule.start(Dictionnary.paramsId)
-      .then(data => {
-          results = JSON.parse(data);
-          this.response_server(results);
-      },
-      cause => {
-          console.log(cause);
-      })
-      .catch(err => {
-          console.log(err);
-      });
-  }
+IdcheckioModule.start(Dictionnary.paramsIDOffline)
+.then(data => {
+    results = JSON.parse(data);
+    this.response_server(results);
+},
+cause => {
+    this.showError(cause);
+})
+.catch(err => {
+    console.log(err);
+});
 ```
 
 7. To start an online capture of a document, you have the method the `startOnline()` method. You will receive the result in a string that can be parse into a json object.
@@ -198,7 +190,7 @@ IdcheckioModule.startOnline(paramsLiveness, onlineContext)
     this.response_server(results);
 },
 cause => {
-    console.log(cause);
+    this.showError(cause);
 })
 .catch(err => {
     console.log(err);
@@ -234,13 +226,26 @@ analyze(params, onlineContext){
                 this.response_server(results);
             },
             cause => {
-                console.log(cause);
+                this.showError(cause);
             })
             .catch(err => {
                 console.log(err);
             });
         }
     });
+}
+```
+
+9. To handle error, you can parse the message of the error and use this object to do some error handling. To know a bit more about the error system in the sdk, look at `4.2.10. IdcheckioError` in the developer's guide.
+```javascript
+showError(error) {
+    console.log(error);
+    var errorMsg = JSON.parse(error.message.replace("\n", "\\n"));
+    console.log("cause: " + errorMsg.cause);
+    console.log("details: " + errorMsg.details);
+    console.log("message: " + errorMsg.message);
+    console.log("subCause: " + errorMsg.subCause);
+    alert(errorMsg.message);        
 }
 ```
 

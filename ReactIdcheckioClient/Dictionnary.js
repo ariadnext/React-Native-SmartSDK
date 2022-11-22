@@ -1,9 +1,8 @@
-import { CheckType, CISType, Codeline, ConfirmationType, DocumentType, Extraction, FaceDetection, FeedbackLevel, FileSize, IDCheckioOrientation, IDCheckioParamsBuilder, IntegrityCheck, Language, OnlineConfig, ScanBothSides } from "react-idcheckio"
+import { CISType, Codeline, ConfirmationType, DocumentType, Extraction, FaceDetection, FeedbackLevel, FileSize, IDCheckioOrientation, IDCheckioParamsBuilder, IntegrityCheck, Language, OnlineConfig, ScanBothSides } from "react-idcheckio"
 
-export const paramsID = new IDCheckioParamsBuilder()
+export const paramsIDOffline = new IDCheckioParamsBuilder()
 .setDocType(DocumentType.ID)
 .setOrientation(IDCheckioOrientation.PORTRAIT)
-.setIntegrityCheck(new IntegrityCheck(true))
 .setUseHd(false)
 .setConfirmationType(ConfirmationType.DATA_OR_PICTURE)
 .setScanBothSides(ScanBothSides.ENABLED)
@@ -15,15 +14,17 @@ export const paramsID = new IDCheckioParamsBuilder()
 .setFeedbackLevel(FeedbackLevel.ALL)
 .setAdjustCrop(false)
 .setConfirmAbort(false)
-.setOnlineConfig(new OnlineConfig({ checkType: CheckType.CHECK_FAST, isReferenceDocument: true }))
+.build()
+
+export const paramsIDOnline = new IDCheckioParamsBuilder()
+.setDocType(DocumentType.ID)
+.setOrientation(IDCheckioOrientation.PORTRAIT)
+.setIntegrityCheck(new IntegrityCheck({ readEmrtd: true, docLiveness: true }))
+.setOnlineConfig(new OnlineConfig({ isReferenceDocument: true }))
 .build()
 
 export const paramsIDAnalyze = new IDCheckioParamsBuilder()
 .setDocType(DocumentType.ID)
-.setOrientation(IDCheckioOrientation.PORTRAIT)
-.setUseHd(false)
-.setConfirmationType(ConfirmationType.DATA_OR_PICTURE)
-.setScanBothSides(ScanBothSides.ENABLED)
 .setSideOneExtraction(new Extraction(Codeline.ANY, FaceDetection.ENABLED))
 .setSideTwoExtraction(new Extraction(Codeline.ANY, FaceDetection.ENABLED))
 .setMaxPictureFilesize(FileSize.TWO_MEGA_BYTES)
@@ -89,8 +90,8 @@ export class ParamsListItem {
 }
 
 export const paramsList = [
-    new ParamsListItem({name: "ID Offline", params: paramsID, isOnline: false}),
-    new ParamsListItem({name: "ID Online", params: paramsID, isOnline: true}),
+    new ParamsListItem({name: "ID Offline", params: paramsIDOffline, isOnline: false}),
+    new ParamsListItem({name: "ID Online", params: paramsIDOnline, isOnline: true}),
     new ParamsListItem({name: "Liveness Online", params: paramsLiveness, isOnline: true}),
     new ParamsListItem({name: "French health card Online", params: paramsFrenchHealthCard, isOnline: true}),
     new ParamsListItem({name: "Selfie Online", params: paramsSelfie, isOnline: true}),

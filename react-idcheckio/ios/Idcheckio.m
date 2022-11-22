@@ -13,20 +13,15 @@ RCT_EXPORT_METHOD(preload:(BOOL)extractData){
     [Idcheckio.shared preloadWithExtractData:extractData];
 }
 
-RCT_EXPORT_METHOD(activate:(NSString*)licenceFileName
+RCT_EXPORT_METHOD(activate:(NSString*)idToken
                   extractData:(BOOL)extractData
-                  disableAudioForLiveness:(BOOL)disableAudioForLiveness
-                  sdkEnvironment:(NSString*)sdkEnvironment
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject){
-    [Idcheckio.shared activateWithLicenseFilename:licenceFileName extractData:extractData
-                          disableAudioForLiveness:disableAudioForLiveness
-                                   sdkEnvironment:[sdkEnvironment lowercaseString]
-                                       onComplete:^(NSException* error){
+    [Idcheckio.shared activateWithToken:idToken extractData:extractData onComplete:^(NSError* error){
         if(error == nil){
             resolve(@"");
         } else {
-            reject(@"0", error.reason, [NSError errorWithDomain:@"IdcheckioSdk" code:0 userInfo:error.userInfo]);
+            reject(@"0", [IdcheckioObjcUtil getErrorJson:error], error);
         }
     }];
 }
@@ -41,21 +36,13 @@ RCT_EXPORT_METHOD(start:(NSDictionary*)params
     NSError* error;
     [Idcheckio.shared setParams:sdkParams error:&error];
     if(error != nil){
-        reject(@"", error.localizedDescription, error);
+        reject(@"0", [IdcheckioObjcUtil getErrorJson:error], error);
     }
 
     dispatch_async(dispatch_get_main_queue(), ^{
         IdcheckioViewController *idcheckioViewController = [[IdcheckioViewController alloc] init];
         idcheckioViewController.modalPresentationStyle = UIModalPresentationFullScreen;
         idcheckioViewController.isOnlineSession = false;
-        idcheckioViewController.startCompletion = ^(NSError *error) {
-            if(error != nil){
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [[[UIApplication sharedApplication] keyWindow].rootViewController dismissViewControllerAnimated:true completion:^{}];
-                });
-                reject(@"0", error.localizedDescription, nil);
-            }
-        };
         [idcheckioViewController setResultCompletion:^(IdcheckioResult *result, NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[[UIApplication sharedApplication] keyWindow].rootViewController dismissViewControllerAnimated:true completion:^{}];
@@ -63,7 +50,7 @@ RCT_EXPORT_METHOD(start:(NSDictionary*)params
             if(result != nil){
                 captureResolver([IdcheckioObjcUtil resultToJSON:result]);
             } else if(error != nil){
-                captureRejecter(@"0", error.localizedDescription, error);
+                captureRejecter(@"0", [IdcheckioObjcUtil getErrorJson:error], error);
             }
         }];
         [[[UIApplication sharedApplication] keyWindow].rootViewController presentViewController:idcheckioViewController animated:true completion:nil];
@@ -81,7 +68,7 @@ RCT_EXPORT_METHOD(startOnline:(NSDictionary*)params
     NSError* error;
     [Idcheckio.shared setParams:sdkParams error:&error];
     if(error != nil){
-        reject(@"", error.localizedDescription, nil);
+        reject(@"0", [IdcheckioObjcUtil getErrorJson:error], error);
     }
 
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -89,14 +76,6 @@ RCT_EXPORT_METHOD(startOnline:(NSDictionary*)params
         idcheckioViewController.modalPresentationStyle = UIModalPresentationFullScreen;
         idcheckioViewController.isOnlineSession = true;
         idcheckioViewController.onlineContext = onlineContext;
-        idcheckioViewController.startCompletion = ^(NSError *error) {
-            if(error != nil){
-                reject(@"0", error.localizedDescription, nil);
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [[[UIApplication sharedApplication] keyWindow].rootViewController dismissViewControllerAnimated:true completion:^{}];
-                });
-            }
-        };
         [idcheckioViewController setResultCompletion:^(IdcheckioResult *result, NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[[UIApplication sharedApplication] keyWindow].rootViewController dismissViewControllerAnimated:true completion:^{}];
@@ -104,10 +83,30 @@ RCT_EXPORT_METHOD(startOnline:(NSDictionary*)params
             if(result != nil){
                 captureResolver([IdcheckioObjcUtil resultToJSON:result]);
             } else if(error != nil){
-                captureRejecter(@"0", error.localizedDescription, error);
+                captureRejecter(@"0", [IdcheckioObjcUtil getErrorJson:error], error);
             }
         }];
         [[[UIApplication sharedApplication] keyWindow].rootViewController presentViewController:idcheckioViewController animated:true completion:nil];
+    });
+}
+
+RCT_EXPORT_METHOD(startIps:(NSString*)folderUid
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject){
+    if([folderUid length] == 0){
+        reject(@"0", [IdcheckioObjcUtil missingFolderUid], nil);
+        return;
+    }
+    IpsTheme *ipsTheme = [[IpsTheme alloc] init];
+    [ipsTheme setOrientation:@"automatic"];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [Idcheckio startIpsWith:folderUid from:[[UIApplication sharedApplication] keyWindow].rootViewController ipsTheme:ipsTheme token:nil completion:^(NSError* error){
+            if(error != nil) {
+                reject(@"0", [IdcheckioObjcUtil getErrorJson:error], error);
+            } else {
+                resolve(@"{}");
+            }
+        }];
     });
 }
 
@@ -125,7 +124,7 @@ RCT_EXPORT_METHOD(analyze:(NSDictionary*)params
     OnlineContext* onlineContext = [self getOnlineContextFromJson:context];
     [Idcheckio.shared setParams:sdkParams error:&error];
     if(error != nil){
-        reject(@"", error.localizedDescription, nil);
+        reject(@"0", [IdcheckioObjcUtil getErrorJson:error], error);
     }
     Idcheckio.shared.delegate = self;
     NSURL *url1 = [NSURL URLWithString:[side1Image stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
@@ -171,12 +170,12 @@ RCT_EXPORT_METHOD(analyze:(NSDictionary*)params
             id paramIntegrityCheck = [params objectForKey:key];
             IntegrityCheck *integrity = [[IntegrityCheck alloc] init];
             integrity.readEmrtd = [paramIntegrityCheck objectForKey:readEmrtdKey];
+            integrity.docLiveness = [paramIntegrityCheck objectForKey:docLivenessKey];
             [sdkParams setIntegrityCheck: integrity];
         } else if ([key isEqualToString:onlineConfigKey]){
             id onlineConfigParams = [params objectForKey:key];
             OnlineConfig *onlineConfig = [sdkParams onlineConfig];
             onlineConfig.isReferenceDocument = [[onlineConfigParams objectForKey:isReferenceDocumentKey] boolValue];
-            [onlineConfig setCheckType:[onlineConfigParams objectForKey:checkTypeKey]];
             if ([onlineConfigParams objectForKey:cisTypeKey] != [NSNull null]) {
                 [onlineConfig setCisType:[onlineConfigParams objectForKey:cisTypeKey]];
             }
@@ -192,19 +191,17 @@ RCT_EXPORT_METHOD(analyze:(NSDictionary*)params
         } else if ([key isEqualToString:useHdKey]) {
             [sdkParams setUseHD: [[params objectForKey:key] boolValue]];
         } else if([key isEqualToString:languageKey]){
-            [Idcheckio.shared.extraParameters setLanguage:[params objectForKey:key]];
+            [Idcheckio.shared.extraParams setLanguage:[params objectForKey:key]];
         } else if([key isEqualToString:manualButtonTimerKey]){
-            Idcheckio.shared.extraParameters.manualButtonTimer = [[params objectForKey:key] doubleValue];
+            Idcheckio.shared.extraParams.manualButtonTimer = [[params objectForKey:key] doubleValue];
         } else if([key isEqualToString:maxPictureFilesizeKey]){
-            [Idcheckio.shared.extraParameters setMaxPictureFilesize:[params objectForKey:key]];
+            [Idcheckio.shared.extraParams setMaxPictureFilesize:[params objectForKey:key]];
         } else if([key isEqualToString:feedbackLevelKey]){
-            [Idcheckio.shared.extraParameters setFeedbackLevel:[params objectForKey:key]];
+            [Idcheckio.shared.extraParams setFeedbackLevel:[params objectForKey:key]];
         } else if([key isEqualToString:confirmAbortKey]){
-            Idcheckio.shared.extraParameters.confirmAbort = [[params objectForKey:key] boolValue];
+            Idcheckio.shared.extraParams.confirmAbort = [[params objectForKey:key] boolValue];
         } else if([key isEqualToString:adjustCropKey]){
-            Idcheckio.shared.extraParameters.adjustCrop = [[params objectForKey:key] boolValue];
-        } else if([key isEqualToString:sdkEnvironmentKey]){
-            Idcheckio.shared.extraParameters.sdkEnvironment = [params objectForKey:key];
+            Idcheckio.shared.extraParams.adjustCrop = [[params objectForKey:key] boolValue];
         }
     }
     return sdkParams;
@@ -217,14 +214,12 @@ RCT_EXPORT_METHOD(analyze:(NSDictionary*)params
     return YES;
 }
 
-- (void)idcheckioDidSendEventWithInteraction:(enum IdcheckioInteraction)interaction msg:(IdcheckioMsg * _Nullable)msg {}
-
 - (void)idcheckioFinishedWithResult:(IdcheckioResult * _Nullable)result error:(NSError * _Nullable)error {
     dispatch_async(dispatch_get_main_queue(), ^{
         if(result != nil){
             captureResolver([IdcheckioObjcUtil resultToJSON:result]);
         } else if(error != nil){
-            captureRejecter(@"0", error.localizedDescription, error);
+            captureRejecter(@"0", [IdcheckioObjcUtil getErrorJson:error], error);
         }
     });
 }
