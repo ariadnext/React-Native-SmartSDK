@@ -12,7 +12,7 @@ export const paramsIDOffline = new IDCheckioParamsBuilder()
 .setManualButtonTimer(10)
 .setMaxPictureFilesize(FileSize.TWO_MEGA_BYTES)
 .setFeedbackLevel(FeedbackLevel.ALL)
-.setAdjustCrop(false)
+.setAdjustCrop(true)
 .setConfirmAbort(false)
 .build()
 

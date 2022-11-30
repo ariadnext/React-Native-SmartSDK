@@ -149,6 +149,7 @@ RCT_EXPORT_METHOD(analyze:(NSDictionary*)params
 
 - (SDKParams*) getParamsFromDictionnary:(NSDictionary*)params {
     SDKParams* sdkParams = [[SDKParams alloc] init];
+    SDKExtraParams* extraParams = [[SDKExtraParams alloc] init];
     for(NSString* key in [params allKeys]){
         if([key isEqualToString:docTypeKey]){
             [sdkParams setDocumentType:[params objectForKey:key]];
@@ -191,18 +192,19 @@ RCT_EXPORT_METHOD(analyze:(NSDictionary*)params
         } else if ([key isEqualToString:useHdKey]) {
             [sdkParams setUseHD: [[params objectForKey:key] boolValue]];
         } else if([key isEqualToString:languageKey]){
-            [Idcheckio.shared.extraParams setLanguage:[params objectForKey:key]];
+            [extraParams setLanguage:[params objectForKey:key]];
         } else if([key isEqualToString:manualButtonTimerKey]){
-            Idcheckio.shared.extraParams.manualButtonTimer = [[params objectForKey:key] doubleValue];
+            [extraParams setManualButtonTimer:[[params objectForKey:key] doubleValue]];
         } else if([key isEqualToString:maxPictureFilesizeKey]){
-            [Idcheckio.shared.extraParams setMaxPictureFilesize:[params objectForKey:key]];
+            [extraParams setMaxPictureFilesize:[params objectForKey:key]];
         } else if([key isEqualToString:feedbackLevelKey]){
-            [Idcheckio.shared.extraParams setFeedbackLevel:[params objectForKey:key]];
+            [extraParams setFeedbackLevel:[params objectForKey:key]];
         } else if([key isEqualToString:confirmAbortKey]){
-            Idcheckio.shared.extraParams.confirmAbort = [[params objectForKey:key] boolValue];
+            [extraParams setConfirmAbort:[[params objectForKey:key] boolValue]];
         } else if([key isEqualToString:adjustCropKey]){
-            Idcheckio.shared.extraParams.adjustCrop = [[params objectForKey:key] boolValue];
+            [extraParams setAdjustCrop:[[params objectForKey:key] boolValue]];
         }
+        [Idcheckio.shared setExtraParams:extraParams error:nil];
     }
     return sdkParams;
 }
