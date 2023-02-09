@@ -77,14 +77,17 @@ RCT_EXPORT_METHOD(startOnline:(NSDictionary*)params
         idcheckioViewController.isOnlineSession = true;
         idcheckioViewController.onlineContext = onlineContext;
         [idcheckioViewController setResultCompletion:^(IdcheckioResult *result, NSError *error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [[[UIApplication sharedApplication] keyWindow].rootViewController dismissViewControllerAnimated:true completion:^{}];
-            });
-            if(result != nil){
-                captureResolver([IdcheckioObjcUtil resultToJSON:result]);
-            } else if(error != nil){
-                captureRejecter(@"0", [IdcheckioObjcUtil getErrorJson:error], error);
-            }
+           dispatch_async(dispatch_get_main_queue(), ^{
+               [[[UIApplication sharedApplication] keyWindow].rootViewController dismissViewControllerAnimated:true completion:^{
+                   dispatch_async(dispatch_get_main_queue(), ^{
+                       if(result != nil){
+                           captureResolver([IdcheckioObjcUtil resultToJSON:result]);
+                       } else if(error != nil){
+                           captureRejecter(@"0", [IdcheckioObjcUtil getErrorJson:error], error);
+                       }
+                   });
+               }];
+           });
         }];
         [[[UIApplication sharedApplication] keyWindow].rootViewController presentViewController:idcheckioViewController animated:true completion:nil];
     });

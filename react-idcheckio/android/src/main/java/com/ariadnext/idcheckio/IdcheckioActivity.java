@@ -11,7 +11,6 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import com.ariadnext.idcheckio.sdk.bean.DayNightTheme;
-import com.ariadnext.idcheckio.sdk.bean.DisplayMode;
 import com.ariadnext.idcheckio.sdk.bean.IpsCustomization;
 import com.ariadnext.idcheckio.sdk.bean.OnlineContext;
 import com.ariadnext.idcheckio.sdk.bean.Orientation;
@@ -60,9 +59,7 @@ public class IdcheckioActivity extends FragmentActivity implements IdcheckioInte
                     R.color.idcheckio_sdk_primary_color,
                     // If you let the title and text color null, it will automatically switch between white and black depending on the background it is on.
                     null,
-                    null,
-                    // The display mode will be removed in a future update
-                    DisplayMode.DEFAULT
+                    null
             );
             IpsCustomization ipsCustomization = new IpsCustomization(dayNightTheme, Orientation.AUTOMATIC);
             Idcheckio.startIps(this, folderUid, this, ipsCustomization, null);
