@@ -1,7 +1,10 @@
 package com.ariadnext.idcheckio;
 
 import static com.ariadnext.idcheckio.IdcheckioConst.ADJUST_CROP;
+import static com.ariadnext.idcheckio.IdcheckioConst.BACKGROUND_COLOR;
 import static com.ariadnext.idcheckio.IdcheckioConst.BIOMETRIC_CONSENT;
+import static com.ariadnext.idcheckio.IdcheckioConst.BORDER_COLOR;
+import static com.ariadnext.idcheckio.IdcheckioConst.CAPTURE_MODE;
 import static com.ariadnext.idcheckio.IdcheckioConst.CIS_TYPE;
 import static com.ariadnext.idcheckio.IdcheckioConst.CONFIRM_ABORT;
 import static com.ariadnext.idcheckio.IdcheckioConst.CONFIRM_TYPE;
@@ -12,6 +15,7 @@ import static com.ariadnext.idcheckio.IdcheckioConst.ENABLE_MANUAL_ANALYSIS;
 import static com.ariadnext.idcheckio.IdcheckioConst.FACE_DETECTION;
 import static com.ariadnext.idcheckio.IdcheckioConst.FEEDBACK_LEVEL;
 import static com.ariadnext.idcheckio.IdcheckioConst.FOLDER_UID;
+import static com.ariadnext.idcheckio.IdcheckioConst.FOREGROUND_COLOR;
 import static com.ariadnext.idcheckio.IdcheckioConst.INTEGRITY_CHECK;
 import static com.ariadnext.idcheckio.IdcheckioConst.IS_REFERENCE_DOC;
 import static com.ariadnext.idcheckio.IdcheckioConst.LANGUAGE;
@@ -19,12 +23,19 @@ import static com.ariadnext.idcheckio.IdcheckioConst.MANUAL_BUTTON_TIMER;
 import static com.ariadnext.idcheckio.IdcheckioConst.MAX_PICTURE_FILESIZE;
 import static com.ariadnext.idcheckio.IdcheckioConst.ONLINE_CONFIG;
 import static com.ariadnext.idcheckio.IdcheckioConst.ORIENTATION;
+import static com.ariadnext.idcheckio.IdcheckioConst.PRIMARY_COLOR;
 import static com.ariadnext.idcheckio.IdcheckioConst.READ_EMRTD;
 import static com.ariadnext.idcheckio.IdcheckioConst.SCAN_BOTH_SIDES;
 import static com.ariadnext.idcheckio.IdcheckioConst.SIDE_1_EXTRACTION;
 import static com.ariadnext.idcheckio.IdcheckioConst.SIDE_2_EXTRACTION;
+import static com.ariadnext.idcheckio.IdcheckioConst.TEXT_COLOR;
+import static com.ariadnext.idcheckio.IdcheckioConst.THEME;
+import static com.ariadnext.idcheckio.IdcheckioConst.TITLE_COLOR;
 import static com.ariadnext.idcheckio.IdcheckioConst.USE_HD;
 
+import android.graphics.Color;
+
+import com.ariadnext.idcheckio.sdk.bean.CaptureMode;
 import com.ariadnext.idcheckio.sdk.bean.ConfirmationType;
 import com.ariadnext.idcheckio.sdk.bean.DataRequirement;
 import com.ariadnext.idcheckio.sdk.bean.DocumentType;
@@ -37,6 +48,7 @@ import com.ariadnext.idcheckio.sdk.bean.IntegrityCheck;
 import com.ariadnext.idcheckio.sdk.bean.Language;
 import com.ariadnext.idcheckio.sdk.bean.OnlineConfig;
 import com.ariadnext.idcheckio.sdk.bean.Orientation;
+import com.ariadnext.idcheckio.sdk.bean.Theme;
 import com.ariadnext.idcheckio.sdk.component.IdcheckioView;
 import com.ariadnext.idcheckio.sdk.interfaces.cis.CISType;
 
@@ -96,6 +108,12 @@ public class ParameterUtils {
                     break;
                 case CONFIRM_ABORT:
                     idcheckioView.confirmAbort(Boolean.parseBoolean(value.toString()));
+                    break;
+                case CAPTURE_MODE:
+                    idcheckioView.captureMode(CaptureMode.valueOf(value.toString()));
+                    break;
+                case THEME:
+                    idcheckioView.theme(getTheme((HashMap<String, Object>) value));
                     break;
             }
         }
@@ -178,5 +196,56 @@ public class ParameterUtils {
             }
         }
         return onlineConfig;
+    }
+
+    private static Theme getTheme(HashMap<String, Object> themeMap) {
+        Integer primaryColor = null;
+        Integer foregroundColor = null;
+        Integer backgroundColor = null;
+        Integer borderColor = null;
+        Integer textColor = null;
+        Integer titleColor = null;
+        if(themeMap.containsKey(PRIMARY_COLOR)) {
+            Object primaryColorOpt = themeMap.get(PRIMARY_COLOR);
+            if(primaryColorOpt != null) {
+                primaryColor = Color.parseColor(primaryColorOpt.toString());
+            }
+        }
+
+        if(themeMap.containsKey(FOREGROUND_COLOR)) {
+            Object foregroundColorOpt = themeMap.get(FOREGROUND_COLOR);
+            if(foregroundColorOpt != null) {
+                foregroundColor = Color.parseColor(foregroundColorOpt.toString());
+            }
+        }
+
+        if(themeMap.containsKey(BACKGROUND_COLOR)) {
+            Object backgroundColorOpt = themeMap.get(BACKGROUND_COLOR);
+            if(backgroundColorOpt != null) {
+                backgroundColor = Color.parseColor(backgroundColorOpt.toString());
+            }
+        }
+
+        if(themeMap.containsKey(BORDER_COLOR)) {
+            Object borderColorOpt = themeMap.get(BORDER_COLOR);
+            if(borderColorOpt != null) {
+                borderColor = Color.parseColor(borderColorOpt.toString());
+            }
+        }
+
+        if(themeMap.containsKey(TEXT_COLOR)) {
+            Object textColorOpt = themeMap.get(TEXT_COLOR);
+            if(textColorOpt != null) {
+                textColor = Color.parseColor(textColorOpt.toString());
+            }
+        }
+
+        if(themeMap.containsKey(TITLE_COLOR)) {
+            Object titleColorOpt = themeMap.get(TITLE_COLOR);
+            if(titleColorOpt != null) {
+                titleColor = Color.parseColor(titleColorOpt.toString());
+            }
+        }
+        return new Theme(foregroundColor, borderColor, backgroundColor, primaryColor, titleColor, textColor);
     }
 }

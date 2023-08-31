@@ -1,6 +1,6 @@
 export class IDCheckioParams {
     constructor({docType, orientation, confirmationType, useHd, integrityCheck, scanBothSides, sideOneExtraction, sideTwoExtraction, 
-        language, manualButtonTimer, feedbackLevel, adjustCrop, maxPictureFilesize, token, confirmAbort, onlineConfig}={}){
+        language, manualButtonTimer, feedbackLevel, adjustCrop, maxPictureFilesize, token, confirmAbort, onlineConfig, captureMode, theme}={}){
         this.docType = docType
         this.orientation = orientation
         this.confirmationType = confirmationType
@@ -17,6 +17,8 @@ export class IDCheckioParams {
         this.token = token
         this.confirmAbort = confirmAbort
         this.onlineConfig = onlineConfig
+        this.captureMode = captureMode
+        this.theme = theme
     }
 }
 
@@ -163,14 +165,24 @@ export class IDCheckioParamsBuilder {
             this.onlineConfig = onlineConfig
             return this
         } else {
-            throw new Error("onlineConfig must be an Extraction ")
+            throw new Error("onlineConfig must be an OnlineConfig")
+        }
+    }
+
+    setCaptureMode(captureMode){
+        if(Object.values(CaptureMode).includes(captureMode)){
+            this.captureMode = captureMode
+            return this
+        } else {
+            throw new Error("CaptureMode value is incorrect")
         }
     }
 
     build() {
         return new IDCheckioParams({ docType: this.docType, adjustCrop: this.adjustCrop, confirmAbort: this.confirmAbort, feedbackLevel: this.feedbackLevel, confirmationType: this.confirmationType,
             integrityCheck: this.integrityCheck, language: this.language, manualButtonTimer: this.manualButtonTimer, maxPictureFilesize: this.maxPictureFilesize, onlineConfig: this.onlineConfig,
-            orientation: this.orientation, scanBothSides: this.scanBothSides, sideOneExtraction: this.sideOneExtraction, sideTwoExtraction: this.sideTwoExtraction, token: this.token, useHd: this.useHd
+            orientation: this.orientation, scanBothSides: this.scanBothSides, sideOneExtraction: this.sideOneExtraction, sideTwoExtraction: this.sideTwoExtraction, token: this.token, useHd: this.useHd,
+            captureMode: this.captureMode
         })
     }
 }
@@ -210,6 +222,24 @@ export class OnlineConfig {
         this.folderUid = folderUid
         this.biometricConsent = biometricConsent
         this.enableManualAnalysis = enableManualAnalysis
+    }
+}
+
+export class IDCheckTheme {
+    constructor({
+        primaryColor = null,
+        foregroundColor = null,
+        backgroundColor = null,
+        borderColor = null,
+        textColor = null,
+        titleColor = null
+    }={}){
+        this.primaryColor = primaryColor
+        this.foregroundColor = foregroundColor
+        this.backgroundColor = backgroundColor
+        this.borderColor = borderColor
+        this.textColor = textColor
+        this.titleColor = titleColor
     }
 }
   
@@ -304,4 +334,10 @@ export const CISType = {
     CAR_REGISTRATION:"CAR_REGISTRATION", 
     LIVENESS:"LIVENESS", 
     OTHER:"OTHER" 
+}
+
+export const CaptureMode = {
+    CAMERA:"CAMERA",
+    PROMPT:"PROMPT",
+    UPLOAD:"UPLOAD"
 }

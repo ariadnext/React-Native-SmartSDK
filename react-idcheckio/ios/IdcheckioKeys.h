@@ -27,7 +27,13 @@
 #define folderUidKey @"folderUid"
 #define cisTypeKey @"cisType"
 #define isReferenceDocumentKey @"isReferenceDocument"
-
+#define themeKey @"theme"
+#define primaryColorKey @"primaryColor"
+#define foregroundColorKey @"foregroundColor"
+#define backgroundColorKey @"backgroundColor"
+#define borderColorKey @"borderColor"
+#define textColorKey @"textColor"
+#define titleColorKey @"titleColor"
 
 /* Extra parameters key */
 #define languageKey @"language"
@@ -37,6 +43,7 @@
 #define adjustCropKey @"adjustCrop"
 #define confirmAbortKey @"confirmAbort"
 #define sdkEnvironmentKey @"sdkEnvironment"
+#define captureModeKey @"captureMode"
 
 
 #endif /* Header_h */

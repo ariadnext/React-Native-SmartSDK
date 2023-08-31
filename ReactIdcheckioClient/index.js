@@ -5,8 +5,9 @@ import React, {
     Component
 } from 'react';
 import IdcheckioModule from './IdcheckioModule';
-import {Picker} from '@react-native-picker/picker';
+import RNPickerSelect from 'react-native-picker-select';
 import * as Dictionnary from './Dictionnary';
+import * as SdkColor from './SdkColor';
 import {
     AppRegistry,
     StyleSheet,
@@ -29,7 +30,8 @@ class Resultat extends Component {
             sdkResult: null,
             isIps: false,
             folderUid: "",
-            selectedValue: 0
+            selectedValue: 0,
+            selectedColor: 0
         };
     }
 
@@ -37,6 +39,12 @@ class Resultat extends Component {
         this.setState({
             isIps: value == 10,
             selectedValue: value
+        })
+    }
+
+    setSelectedColor(value){
+        this.setState({
+            selectedColor: value
         })
     }
 
@@ -54,6 +62,10 @@ class Resultat extends Component {
 
     capture() {
         let selectedParams = Dictionnary.paramsList[this.state.selectedValue]
+        let selectedTheme = SdkColor.colorsList[this.state.selectedColor]
+        let themedParams = { ...selectedParams.params, theme: selectedTheme }
+        console.log(selectedTheme);
+        console.log(selectedParams);
         //Retrieve the online context from last session, it will be used as parameter for the next session
         let onlineContext
         if(this.state.sdkResult != null && this.state.sdkResult.onlineContext != null) {
@@ -67,7 +79,7 @@ class Resultat extends Component {
         } else {
             // Capture mode
             if (selectedParams.isOnline) {
-                IdcheckioModule.startOnline(selectedParams.params, onlineContext)
+                IdcheckioModule.startOnline(themedParams, onlineContext)
                 .then(data => {
                     console.log(data);
                     let results = JSON.parse(data)
@@ -185,22 +197,37 @@ class Resultat extends Component {
                 <Text style = {styles.activationText}>{(this.state.sdkActivated)? "SDK activated! 🎉" : "SDK not activated"}</Text>
                 <View style={styles.elementContainer} key='Choose your configuration'>
                     <Text style={styles.picker}> Choose your configuration </Text>
-                    <Picker
+                    <RNPickerSelect
                         selectedValue={this.state.selectedValue}
                         onValueChange={(v) => this.setSelectedValue(v)}
-                        mode="dropdown">
-                        <Picker.Item label={Dictionnary.paramsList[0].name} value='0'/>
-                        <Picker.Item label={Dictionnary.paramsList[1].name} value='1'/>
-                        <Picker.Item label={Dictionnary.paramsList[2].name} value='2'/>
-                        <Picker.Item label={Dictionnary.paramsList[3].name} value='3'/>
-                        <Picker.Item label={Dictionnary.paramsList[4].name} value='4'/>
-                        <Picker.Item label={Dictionnary.paramsList[5].name} value='5'/>
-                        <Picker.Item label={Dictionnary.paramsList[6].name} value='6'/>
-                        <Picker.Item label={Dictionnary.paramsList[7].name} value='7'/>
-                        <Picker.Item label={Dictionnary.paramsList[8].name} value='8'/>
-                        <Picker.Item label={Dictionnary.paramsList[9].name} value='9'/>
-                        <Picker.Item label='Start Ips' value='10'/>
-                    </Picker>
+                        mode="dropdown"
+                        items={[
+                            { label: Dictionnary.paramsList[0].name, value: '0' },
+                            { label: Dictionnary.paramsList[1].name, value: '1' },
+                            { label: Dictionnary.paramsList[2].name, value: '2' },
+                            { label: Dictionnary.paramsList[3].name, value: '3' },
+                            { label: Dictionnary.paramsList[4].name, value: '4' },
+                            { label: Dictionnary.paramsList[5].name, value: '5' },
+                            { label: Dictionnary.paramsList[6].name, value: '6' },
+                            { label: Dictionnary.paramsList[7].name, value: '7' },
+                            { label: Dictionnary.paramsList[8].name, value: '8' },
+                            { label: Dictionnary.paramsList[9].name, value: '9' },
+                            { label: 'Start Ips', value: '10' }
+                        ]}/>
+                </View>
+                <View style={styles.elementContainer} key='Choose your theme'>
+                    <Text style={styles.picker}> Choose your theme </Text>
+                    <RNPickerSelect
+                        selectedValue={this.state.selectedColor}
+                        onValueChange={(v) => this.setSelectedColor(v)}
+                        mode="dropdown"
+                        items={[
+                            { label: "Default", value: '0' },
+                            { label: "Yris", value: '1' },
+                            { label: "Blue", value: '2' },
+                            { label: "Purple", value: '3' },
+                            { label: "Dark Gold", value: '4' }
+                        ]}/>
                 </View>
                 <TextInput style={styles.input} display= {(this.state.isIps)? 'flex' : 'none'} onChangeText={(text) => this.setFolderUid(text)}/>
                 <Button disabled = {this.state.sdkActivated} onPress = {() => {this.activate()}}
@@ -241,6 +268,8 @@ const styles = StyleSheet.create({
         margin: 10,
     },
     picker: {
+        paddingTop: 8,
+        paddingBottom: 8,
         fontSize: 18,
         textAlign: 'center'
     },

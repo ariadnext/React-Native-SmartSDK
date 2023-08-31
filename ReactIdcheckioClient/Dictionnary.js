@@ -1,4 +1,4 @@
-import { CISType, Codeline, ConfirmationType, DocumentType, Extraction, FaceDetection, FeedbackLevel, FileSize, IDCheckioOrientation, IDCheckioParamsBuilder, IntegrityCheck, Language, OnlineConfig, ScanBothSides } from "react-idcheckio"
+import { CISType, CaptureMode, Codeline, ConfirmationType, DocumentType, Extraction, FaceDetection, FeedbackLevel, FileSize, IDCheckioOrientation, IDCheckioParamsBuilder, IntegrityCheck, Language, OnlineConfig, ScanBothSides } from "react-idcheckio"
 
 export const paramsIDOffline = new IDCheckioParamsBuilder()
 .setDocType(DocumentType.ID)
@@ -65,9 +65,8 @@ export const paramsVehicleRegistration = new IDCheckioParamsBuilder()
 
 export const paramsIban = new IDCheckioParamsBuilder()
 .setDocType(DocumentType.PHOTO)
-.setConfirmationType(ConfirmationType.DATA_OR_PICTURE)
 .setOrientation(IDCheckioOrientation.PORTRAIT)
-.setUseHd(true)
+.setCaptureMode(CaptureMode.PROMPT)
 .setOnlineConfig(new OnlineConfig({ cisType: CISType.IBAN }))
 .build()
 

@@ -21,10 +21,19 @@ public class IdcheckioConst {
     public static final String BIOMETRIC_CONSENT = "biometricConsent";
     public static final String ENABLE_MANUAL_ANALYSIS = "enableManualAnalysis";
 
+    public static final String THEME = "theme";
+    public static final String PRIMARY_COLOR = "primaryColor";
+    public static final String FOREGROUND_COLOR = "foregroundColor";
+    public static final String BACKGROUND_COLOR = "backgroundColor";
+    public static final String BORDER_COLOR = "borderColor";
+    public static final String TEXT_COLOR = "textColor";
+    public static final String TITLE_COLOR = "titleColor";
+
     public static final String LANGUAGE = "language";
     public static final String MANUAL_BUTTON_TIMER = "manualButtonTimer";
     public static final String MAX_PICTURE_FILESIZE = "maxPictureFilesize";
     public static final String FEEDBACK_LEVEL = "feedbackLevel";
     public static final String ADJUST_CROP = "adjustCrop";
     public static final String CONFIRM_ABORT = "confirmAbort";
+    public static final String CAPTURE_MODE = "captureMode";
 }

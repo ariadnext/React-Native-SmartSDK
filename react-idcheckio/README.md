@@ -249,4 +249,13 @@ showError(error) {
 }
 ```
 
+## Theming
+
+If you want to change the colors of the sdk to match your theme, it's possible !
+You need to first create an IDCheckTheme() object with your own colors and then add it in the builder in the theme parameter.
+```javascript
+new IDCheckTheme({primaryColor: "#FF0000B7", foregroundColor: "#FFFFFFFF", backgroundColor: "#FFFFFFFF", borderColor: "#FF0000B7"})
+```
+
+
 - ✅  &nbsp; To learn more informations on those methods and theirs parameters. Please refer to the official IDCheck.io sdk documentation.

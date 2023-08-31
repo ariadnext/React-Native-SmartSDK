@@ -1,7 +1,7 @@
 {
   "name": "react-idcheckio",
   "title": "React Idcheckio",
-  "version": "7.0.1",
+  "version": "7.1.8",
   "description": "React Native plugin for IDCheck.io Mobile SDK",
   "main": "index.js",
   "scripts": {
