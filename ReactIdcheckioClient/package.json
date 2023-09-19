@@ -8,6 +8,7 @@
     "start": "react-native start"
   },
   "dependencies": {
+    "@react-native-community/picker": "^1.8.1",
     "react": "17.0.2",
     "react-idcheckio": "file:.yalc/react-idcheckio",
     "react-native": "0.68.2",

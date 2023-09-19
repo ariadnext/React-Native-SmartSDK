@@ -157,6 +157,8 @@ RCT_EXPORT_METHOD(analyze:(NSDictionary*)params
     for(NSString* key in [params allKeys]){
         if([key isEqualToString:docTypeKey]){
             [sdkParams setDocumentType:[params objectForKey:key]];
+        } else if ([key isEqualToString:orientationKey]) {
+            [sdkParams setOrientation:[params objectForKey:key]];
         } else if ([key isEqualToString:confirmationTypeKey]) {
             [sdkParams setConfirmType:[params objectForKey:key]];
         } else if ([key isEqualToString:sideOneExtractionKey]) {
